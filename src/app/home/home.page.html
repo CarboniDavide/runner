@@ -20,25 +20,31 @@
       <ion-label>
         Latitue
       </ion-label>
-      <ion-badge color="danger" slot="end">{{latitude}}</ion-badge>
+      <ion-badge color="danger" slot="end">{{ currentPoint == null ? 0 : currentPoint.latitude}}</ion-badge>
     </ion-item>
     <ion-item>
       <ion-label>
         Longitude
       </ion-label>
-      <ion-badge color="danger" slot="end">{{longitude}}</ion-badge>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.longitude}}</ion-badge>
     </ion-item>
     <ion-item>
       <ion-label>
         Altitude
       </ion-label>
-      <ion-badge color="danger" slot="end">{{altitude}}</ion-badge>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.altitude}}</ion-badge>
     </ion-item>
     <ion-item>
       <ion-label>
         Accuracy
       </ion-label>
-      <ion-badge color="danger" slot="end">{{accuracy}}</ion-badge>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.accuracy}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Speed
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.speed}}</ion-badge>
     </ion-item>
     <ion-item>
       <ion-label>
