@@ -9,21 +9,8 @@
 <ion-content>
   <div class="ion-padding">
 
-    <ion-row>
-      <ion-col size="6">
-        <ion-button  (click)="this.usePromise()" expand="block" color="warning"> Use Promise </ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button  (click)="this.useObserver()" expand="block" color="warning"> Use Observer </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="12">
-        <ion-button *ngIf="!isRunning" (click)="traceLocation()" expand="block" > {{ useWatcher ? "Observer" : "Promise" }} Start </ion-button>
-        <ion-button *ngIf="isRunning"  (click)="stopLocation()"  expand="block" > {{ useWatcher ? "Observer" : "Promise" }} Stop  </ion-button>
-      </ion-col>
-    </ion-row>
+  <ion-button *ngIf="!isRunning" (click)="traceLocation()" expand="block" > Start </ion-button>
+  <ion-button *ngIf="isRunning"  (click)="stopLocation()"  expand="block" > Stop  </ion-button>
 
   <ion-list>
     <ion-item>

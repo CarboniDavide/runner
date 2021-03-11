@@ -20,7 +20,6 @@ export class HomePage {
   timer: Timer = null;
   message: string = "no message";
 
-  useWatcher: Boolean = true;
   isRunning: Boolean = false;
 
   watcher: Subscription = null;
@@ -33,24 +32,14 @@ export class HomePage {
     this.message = "no message";
     this.oldPoint = this.currentPoint = null;
     this.totalDistance = 0;
-    if (this.timer != null && this.timer.state != TimerState.Run){ this.timer.stop(); }
-    this.timer = new Timer(100);
-    this.timer.onClock = () => {};
+    if (this.timer != null && this.timer.state != TimerState.Run){ 
+      this.timer.stop(); 
+      this.isRunning = false;
+    }
+    this.timer = new Timer();
   }
 
   getSessionDistance(){}
-
-  // use geolocation to get user's device coordinates
-  getCurrentCoordinates() {
-    this.oldPoint = this.currentPoint;
-    this.geolocator.getCordinates().then((p) => {
-      this.message = "running";
-      this.currentPoint = p;
-     }).catch((error) => {
-       this.message = error.message;
-     });
-    this.getSessionDistance();
-  }
 
   watchCurrentCoordinates(){
     this.watcher = this.geolocator.watchPosition().subscribe(
@@ -65,11 +54,7 @@ export class HomePage {
   }
 
   traceLocation() {
-    if (!this.useWatcher){ 
-      this.timer.onClock = this.getCurrentCoordinates.bind(this); 
-    } else {
-      this.watchCurrentCoordinates();
-    }
+    this.watchCurrentCoordinates();
     this.isRunning = true;
     this.timer.start();
   }
@@ -77,18 +62,6 @@ export class HomePage {
   stopLocation() {
     this.isRunning = false;
     this.timer.stop();
-    if (this.useWatcher){ 
-      this.watcher.unsubscribe(); 
-    }
-  }
-
-  usePromise() {
-    this.initValues();
-    this.useWatcher = false;
-  }
-
-  useObserver(){
-    this.initValues();
-    this.useWatcher = true;
+    this.watcher.unsubscribe(); 
   }
 }
