@@ -1,6 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Timer, TimerState } from 'jts-timer' ;
+import { getDistance, getPreciseDistance} from 'geolib';
+import { GeolibInputCoordinates } from 'geolib/es/types';
+
+export class GeoPoint {
+  latitude?: number = null;
+  longitude?: number = null;
+  altitude?: number = null;
+  accuracy?: number = null;
+  speed?: number = null;
+
+  constructor(latitude, longitude, altitude, accuracy, speed){
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.accuracy = accuracy;
+    this.speed = speed;
+  }
+
+  public get point(): GeolibInputCoordinates { return { latitude : this.latitude, longitude: this.longitude} 
+}  
+}
 
 @Component({
   selector: 'app-home',
@@ -8,10 +29,9 @@ import { Timer, TimerState } from 'jts-timer' ;
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  latitude: any = 0; //latitude
-  longitude: any = 0; //longitude
-  accuracy: any = 0 // accuracy
-  altitude: any = 0 // altitude
+  currentPoint: GeoPoint;
+  oldPoint: GeoPoint;
+  referredPoint: GeoPoint;
   totalDistance: any = 0;
   lastDistance: any = 0;
   timer: Timer;
@@ -23,47 +43,33 @@ export class HomePage {
 
   InitValues(){
     this.message = "no message";
-    this.latitude = 0;
-    this.longitude = 0;
+    this.oldPoint = this.currentPoint = this.referredPoint = null;
     this.totalDistance = 0;
-    this.timer = new Timer(1000);
+    this.timer = new Timer(3);
     this.timer.onClock = this.getCurrentCoordinates.bind(this);
   }
 
+  getSessionDistance(){
+    if (this.oldPoint == null) { return; }
+    if (this.referredPoint == null) { this.referredPoint = this.currentPoint; }
+    this.lastDistance = getDistance(this.oldPoint.point, this.currentPoint.point, 0.5);
+    if (this.lastDistance > this.currentPoint.accuracy) {
+      this.referredPoint = this.currentPoint;
+      this.lastDistance = getDistance(this.referredPoint.point, this.currentPoint.point, 0.5);
+      this.totalDistance = this.totalDistance + this.lastDistance;
+    }
+  }
 
   // use geolocation to get user's device coordinates
   getCurrentCoordinates() {
-    this.geolocation.getCurrentPosition().then((resp) => {
+    this.oldPoint = this.currentPoint;
+    this.geolocation.getCurrentPosition().then((p) => {
       this.message = "running";
-      let oldLatitude = this.latitude;
-      let oldLongitude = this.longitude;
-      this.latitude = resp.coords.latitude;
-      this.longitude = resp.coords.longitude;
-      this.accuracy = resp.coords.accuracy;
-      this.altitude = resp.coords.altitude;
-      this.lastDistance = Math.round(this.getDistanceFromLatLonInKm(this.latitude, this.longitude, oldLatitude, oldLongitude) * 1000);
-      if (this.lastDistance < 100) { this.totalDistance = this.totalDistance + this.lastDistance };
+      this.currentPoint = new GeoPoint(p.coords.latitude, p.coords.longitude, p.coords.altitude, p.coords.accuracy, p.coords.speed);
      }).catch((error) => {
        this.message = error;
      });
-  }
-
-  getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
-    var dLon = this.deg2rad(lon2-lon1); 
-    var a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-      ; 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    var d = R * c; // Distance in km
-    return d;
-  }
-  
-  deg2rad(deg) {
-    return deg * (Math.PI/180)
+    this.getSessionDistance();
   }
 
   traceLocation() {
