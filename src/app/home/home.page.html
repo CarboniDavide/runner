@@ -1,20 +1,68 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
-      Blank
+        Runner
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="ion-padding">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-button *ngIf="timer.state != 0" (click)="traceLocation()" expand="block"> Start </ion-button>
+    <ion-button *ngIf="timer.state == 0" (click)="stopLocation()" expand="block"> Stop  </ion-button>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Location Coordinates</ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label>
+        Latitue
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{latitude}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Longitude
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{longitude}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Altitude
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{altitude}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Accuracy
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{accuracy}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Last Distance (meters)
+      </ion-label>
+      <ion-badge color="primary" slot="end">{{lastDistance}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Distance (meters)
+      </ion-label>
+      <ion-badge color="primary" slot="end">{{totalDistance}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label class="ion-text-center">
+         {{ message }}
+      </ion-label>
+    </ion-item>
+    </ion-list>    
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">{{ timer.time.hours }}: {{ timer.time.minutes }} :  {{ timer.time.seconds }}</ion-title>
+  </ion-toolbar>
+</ion-footer> 
