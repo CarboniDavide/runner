@@ -3,7 +3,7 @@ import { Timer, TimerState } from 'jts-timer' ;
 import { GeoPoint } from '../GeoProvider/geoPoint';
 import { GeoUtils } from '../GeoProvider/geoUtils';
 import { Geolocator } from '../GeoProvider/geolocator';
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -55,6 +55,7 @@ export class HomePage {
   watchCurrentCoordinates(){
     this.watcher = this.geolocator.watchPosition().subscribe(
       (res) => { 
+        this.oldPoint = this.currentPoint;
         this.currentPoint = res; 
       },
       (error) => {
