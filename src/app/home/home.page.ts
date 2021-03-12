@@ -39,22 +39,21 @@ export class HomePage {
     this.timer = new Timer();
   }
 
-  getSessionDistance(){
-    if (this.oldPoint == null){ return; }
-    if (this.currentPoint.accuracy > 5 ){
-      this.message = "Wait for GPS accuracy";
-      return;
-    }
-    this.message = "Running";
-    this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
-  }
-
   watchCurrentCoordinates(){
     this.watcher = this.geolocator.watchPosition().subscribe(
-      (res) => { 
+      (res) => {
+        if (res.accuracy > 5 ){
+          this.message = "Wait for GPS";
+          this.currentPoint = null;
+          return;
+        }
+
         this.oldPoint = this.currentPoint;
         this.currentPoint = res; 
-        this.getSessionDistance();
+        this.message = "Running";
+
+        if (this.oldPoint == null){ this.oldPoint = this.currentPoint; }
+        this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
       },
       (error) => {
         this.message = error.message;
@@ -63,6 +62,7 @@ export class HomePage {
   }
 
   traceLocation() {
+    this.initValues();
     this.watchCurrentCoordinates();
     this.isRunning = true;
     this.timer.start();
