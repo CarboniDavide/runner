@@ -45,9 +45,21 @@
     </ion-item>
     <ion-item>
       <ion-label>
-        Speed
+        Speed (km/h)
       </ion-label>
-      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.speed}}</ion-badge>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  (currentPoint.speedToKm) }}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Speed (m/s)
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  (currentPoint.speedToMs) }}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        Speed (raw)
+      </ion-label>
+      <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  (currentPoint.speed) }}</ion-badge>
     </ion-item>
     <ion-item>
       <ion-label>

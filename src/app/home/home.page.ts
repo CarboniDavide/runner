@@ -39,13 +39,22 @@ export class HomePage {
     this.timer = new Timer();
   }
 
-  getSessionDistance(){}
+  getSessionDistance(){
+    if (this.oldPoint == null){ return; }
+    if (this.currentPoint.accuracy > 5 ){
+      this.message = "Wait for GPS accuracy";
+      return;
+    }
+    this.message = "Running";
+    this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
+  }
 
   watchCurrentCoordinates(){
     this.watcher = this.geolocator.watchPosition().subscribe(
       (res) => { 
         this.oldPoint = this.currentPoint;
         this.currentPoint = res; 
+        this.getSessionDistance();
       },
       (error) => {
         this.message = error.message;
