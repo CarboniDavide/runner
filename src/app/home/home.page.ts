@@ -4,6 +4,7 @@ import { GeoPoint } from '../GeoProvider/geoPoint';
 import { GeoUtils } from '../GeoProvider/geoUtils';
 import { Geolocator } from '../GeoProvider/geolocator';
 import { Subscription } from 'rxjs';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +25,7 @@ export class HomePage {
 
   watcher: Subscription = null;
 
-  constructor( private geolocator: Geolocator ){
+  constructor( private geolocator: Geolocator, private storage: Storage ){
     this.initValues();
   }
 
@@ -53,7 +54,15 @@ export class HomePage {
         this.message = "Running";
 
         if (this.oldPoint == null){ this.oldPoint = this.currentPoint; }
+
         this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
+
+        //store
+        if ((this.currentPoint.latitudeInM == this.oldPoint.latitudeInM) && (this.currentPoint.altitudeInM == this.oldPoint.altitudeInM)){
+          this.storage.set('point', this.currentPoint);
+        }
+
+        console.log(this.storage.get('point'));
       },
       (error) => {
         this.message = error.message;

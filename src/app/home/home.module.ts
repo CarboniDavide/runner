@@ -7,6 +7,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Geolocator } from '../GeoProvider/geolocator';
+import { IonicStorageModule } from '@ionic/storage';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { Geolocator } from '../GeoProvider/geolocator';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    IonicStorageModule.forRoot()
   ],
   providers: [ Geolocation, Geolocator ],
   declarations: [HomePage]
