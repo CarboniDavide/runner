@@ -23,6 +23,7 @@ export class IonicNativeLocatorProvider extends GeolocatorProvider {
           p.coords.longitude, 
           p.coords.altitude, 
           p.coords.accuracy, 
+          p.coords.altitudeAccuracy,
           p.coords.heading, 
           p.coords.speed, 
           p.timestamp
@@ -41,7 +42,18 @@ export class IonicNativeLocatorProvider extends GeolocatorProvider {
       watch.subscribe( 
         (res: Geoposition) => {
           try {
-            observer.next(new GeoPoint(res.coords.latitude, res.coords.longitude, res.coords.altitude, res.coords.accuracy, res.coords.heading, res.coords.speed, res.timestamp));
+            observer.next(
+              new GeoPoint(
+                res.coords.latitude, 
+                res.coords.longitude, 
+                res.coords.altitude, 
+                res.coords.accuracy, 
+                res.coords.altitudeAccuracy, 
+                res.coords.heading, 
+                res.coords.speed, 
+                res.timestamp
+              )
+            );
           } catch(error) {
             observer.error(error);
           }
