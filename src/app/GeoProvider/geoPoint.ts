@@ -21,6 +21,9 @@ export class GeoPoint {
 
     public get speedToKm() { return (this._speed * 3.6).toFixed(3); }
     public get speedToMs() { return (this._speed).toFixed(3); }
+    public get latitudeInM() { return this._latitude.toFixed(5); }
+    public get longitudeInM() { return this._longitude.toFixed(5); }
+    public get altitudeInM() { return this._altitude.toFixed(0); }
 
     public get latitude() { return this._latitude; }
     public get longitude() { return this._longitude; }
