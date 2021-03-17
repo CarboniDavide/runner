@@ -5,20 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { Geolocator } from '../GeoProvider/geolocator';
-import { IonicStorageModule } from '@ionic/storage';
-
+import { GeoStorage } from '../GeoProvider/geoStorage';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
-    IonicStorageModule.forRoot()
+    HomePageRoutingModule
   ],
-  providers: [ Geolocation, Geolocator ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  providers: [ GeoStorage ]
 })
 export class HomePageModule {}

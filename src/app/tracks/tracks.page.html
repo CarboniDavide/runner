@@ -1,0 +1,13 @@
+<ion-content>
+  <div class="ion-padding">  
+    <ion-list>
+      <ion-item *ngFor="let track of tracks"> {{ track.name }} </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button color="warning" (click)="clearStorage()" expand="block" > Clear Data </ion-button>
+  </ion-toolbar>
+</ion-footer> 

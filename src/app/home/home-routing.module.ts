@@ -6,6 +6,20 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+    children: [
+      {
+        path: 'track',
+        loadChildren: () => import('../track/track.module').then(m => m.TrackPageModule)
+      },
+      {
+        path: 'tracks',
+        loadChildren: () => import('../tracks/tracks.module').then(m => m.TracksPageModule)
+      }
+    ]
+  },
+  {
+    path: '',
+    redirectTo: '/home/track'
   }
 ];
 

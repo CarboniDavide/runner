@@ -1,0 +1,67 @@
+<ion-content>
+  <div class="ion-padding">
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          Time
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{ timer.time.hours }}: {{ timer.time.minutes }} :  {{ timer.time.seconds }}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Latitude
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{ currentPoint == null ? 0 : currentPoint.latitude}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Longitude
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.longitude}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Altitude
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.getAltitude(0)}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Accuracy
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.getAccuracy()}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Direction
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  currentPoint.getHeading()}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Speed (km/h)
+        </ion-label>
+        <ion-badge color="danger" slot="end">{{currentPoint == null ? 0 :  (currentPoint.getSpeedToKm()) }}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Distance (meters)
+        </ion-label>
+        <ion-badge color="primary" slot="end">{{totalDistance}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Message
+        </ion-label>
+        <ion-badge color="primary" slot="end">{{ message }}</ion-badge>
+      </ion-item>
+    </ion-list>    
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button *ngIf="!isRunning" (click)="traceLocation()" expand="block" > Start </ion-button>
+    <ion-button *ngIf="isRunning"  (click)="stopLocation()"  expand="block" > Stop  </ion-button>
+  </ion-toolbar>
+</ion-footer> 
