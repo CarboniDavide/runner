@@ -53,6 +53,7 @@ export class TrackPage {
 
         this.oldPoint = this.currentPoint;
         this.currentPoint = res; 
+        this.geolocator.lastPosition = res;
         this.message = "Running";
         if (this.oldPoint == null ) { this.track.points.push(this.currentPoint); return; }
         this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
@@ -74,11 +75,13 @@ export class TrackPage {
     this.initValues();
     this.watchCurrentCoordinates();
     this.isRunning = true;
+    this.geoStorage.isStoring = this.isRunning;
     this.timer.start();
   }
 
   stopLocation() {
     this.isRunning = false;
+    this.geoStorage.isStoring = this.isRunning;
     this.timer.stop();
     this.watcher.unsubscribe(); 
     // store

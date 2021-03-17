@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Geolocator } from '../GeoProvider/geolocator';
 import { IonicModule } from '@ionic/angular';
-
 import { TrackPageRoutingModule } from './track-routing.module';
 
 import { TrackPage } from './track.page';
@@ -15,7 +13,6 @@ import { TrackPage } from './track.page';
     IonicModule,
     TrackPageRoutingModule
   ],
-  declarations: [TrackPage],
-  providers: [ Geolocator ],
+  declarations: [TrackPage]
 })
 export class TrackPageModule {}

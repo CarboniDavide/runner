@@ -15,6 +15,7 @@ class GeoLocatorFactory {
 export class Geolocator {
 
     geoProvider: GeolocatorProvider;
+    lastPosition: GeoPoint;
 
     constructor() {
         this.geoProvider = GeoLocatorFactory.getGeolocatorProvider();

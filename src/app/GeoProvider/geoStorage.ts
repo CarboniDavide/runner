@@ -7,6 +7,7 @@ export class GeoStorage {
 
     public tracks: Array<GeoTrack> = new Array<GeoTrack>();
     public cTrack: GeoTrack;
+    public isStoring: Boolean = false;
 
     constructor(private storage: Storage,) {
         this.getFromStorage();
@@ -16,6 +17,7 @@ export class GeoStorage {
       this.tracks = new Array<GeoTrack>();
       this.storage.get('tracks').then((res) => {
         let mm = (res == null) ? new Array<GeoTrack>(): res;
+        console.log(res);
         mm.map(track => this.tracks.push(new GeoTrack(track._name, track._date, track._points)));
       }).catch((err)=> {
       });

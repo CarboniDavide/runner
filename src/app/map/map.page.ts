@@ -1,5 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import * as Leaflet from 'leaflet';
+import { Geolocator } from '../GeoProvider/geolocator';
+import { GeoPoint } from '../GeoProvider/geoPoint';
+import { GeoStorage } from '../GeoProvider/geoStorage';
 
 @Component({
   selector: 'app-map',
@@ -8,6 +11,7 @@ import * as Leaflet from 'leaflet';
 })
 export class MapPage implements OnInit, OnDestroy {
 
+  lastPolyline: any = null;
   map: Leaflet.Map;
   lat: any = "46.836794";
   lng: any = "6.552244";
@@ -26,7 +30,7 @@ export class MapPage implements OnInit, OnDestroy {
     minZoom: 3
   }
 
-  constructor() { }
+  constructor(public geoStorage: GeoStorage, public geolocator: Geolocator) { }
   
   ionViewDidEnter(): void {
     this.leafletMap();
@@ -35,13 +39,27 @@ export class MapPage implements OnInit, OnDestroy {
   ngOnInit() {}
 
   leafletMap() {
-    this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
-    Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
-    Leaflet.control.scale().addTo(this.map);
+    try{
+      this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
+      Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
+      Leaflet.control.scale().addTo(this.map);
+    }catch{ }
 
-    const markPoint = Leaflet.marker([this.lat, this.lng]);
-    markPoint.bindPopup('<p>Casa Silvia</p>');
-    this.map.addLayer(markPoint);
+    // let p = this.geolocator.lastPosition;
+    // Leaflet.circle(p.latitude, p.longitude.toString()).addTo(this.map);
+
+    if (this.geoStorage.cTrack == null) { return; }
+
+    let latlngs: any = [];
+  
+    this.geoStorage.cTrack.points.forEach(point => {
+      let p:any = point;
+      latlngs.push([p._latitude, p._longitude]);
+    });
+
+
+    if (this.lastPolyline != null) { this.lastPolyline.remove(this.map);}
+    this.lastPolyline = Leaflet.polyline(latlngs, {color: 'red'}).addTo(this.map);
 
   }
 

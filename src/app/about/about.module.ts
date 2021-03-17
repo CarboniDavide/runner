@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { TracksPageRoutingModule } from './tracks-routing.module';
 
-import { TracksPage } from './tracks.page';
+import { IonicModule } from '@ionic/angular';
+
+import { AboutPageRoutingModule } from './about-routing.module';
+
+import { AboutPage } from './about.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TracksPageRoutingModule
+    AboutPageRoutingModule
   ],
-  declarations: [TracksPage]
+  declarations: [AboutPage]
 })
-export class TracksPageModule {}
+export class AboutPageModule {}
