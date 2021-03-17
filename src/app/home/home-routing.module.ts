@@ -14,6 +14,10 @@ const routes: Routes = [
       {
         path: 'tracks',
         loadChildren: () => import('../tracks/tracks.module').then(m => m.TracksPageModule)
+      },
+      {
+        path: 'map',
+        loadChildren: () => import('../map/map.module').then(m => m.MapPageModule)
       }
     ]
   },
