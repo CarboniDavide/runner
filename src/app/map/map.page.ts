@@ -38,6 +38,11 @@ export class MapPage implements OnInit, OnDestroy {
     this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
     Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
     Leaflet.control.scale().addTo(this.map);
+
+    const markPoint = Leaflet.marker([this.lat, this.lng]);
+    markPoint.bindPopup('<p>Casa Silvia</p>');
+    this.map.addLayer(markPoint);
+
   }
 
   /** Remove map when we have multiple map object */

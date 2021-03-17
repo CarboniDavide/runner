@@ -6,6 +6,7 @@ import { GeoTrack } from "../GeoProvider/geoTrack";
 export class GeoStorage {
 
     public tracks: Array<GeoTrack> = new Array<GeoTrack>();
+    public cTrack: GeoTrack;
 
     constructor(private storage: Storage,) {
         this.getFromStorage();
