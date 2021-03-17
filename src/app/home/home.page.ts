@@ -1,35 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Timer, TimerState } from 'jts-timer' ;
 import { GeoPoint } from '../GeoProvider/geoPoint';
 import { GeoUtils } from '../GeoProvider/geoUtils';
 import { Geolocator } from '../GeoProvider/geolocator';
 import { Subscription } from 'rxjs';
 import { Storage } from '@ionic/storage';
+import { GeoTrack } from '../GeoProvider/geoTrack';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements AfterViewInit{
   currentPoint: GeoPoint;
   oldPoint: GeoPoint;
 
   totalDistance: any = 0;
   lastDistance: any = 0;
 
-  timer: Timer = null;
+  timer: Timer = new Timer();
   message: string = "no message";
 
   isRunning: Boolean = false;
 
   watcher: Subscription = null;
 
-  constructor( private geolocator: Geolocator, private storage: Storage ){
-    this.initValues();
+  track: GeoTrack;
+  tracks: Array<GeoTrack> = new Array<GeoTrack>();
+
+  constructor( private geolocator: Geolocator, private storage: Storage ){}
+
+  getFromStorage(){
+    this.storage.get('tracks').then((res) => {
+      let mm = (res == null) ? new Array<GeoTrack>(): res;
+      mm.map(track => this.tracks.push(new GeoTrack(track._name, track._date, track._points)));
+    }).catch((err)=> {
+      this.message = err;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.getFromStorage();
   }
 
   initValues(){
+    this.track = new GeoTrack();
     this.message = "no message";
     this.oldPoint = this.currentPoint = null;
     this.totalDistance = 0;
@@ -41,28 +57,23 @@ export class HomePage {
   }
 
   watchCurrentCoordinates(){
+    this.message = "Wait for GPS";
     this.watcher = this.geolocator.watchPosition().subscribe(
       (res) => {
-        if (res.accuracy > 5 ){
-          this.message = "Wait for GPS";
-          this.currentPoint = null;
-          return;
-        }
+        if (res.accuracy > 5 ){ return; }
 
         this.oldPoint = this.currentPoint;
         this.currentPoint = res; 
         this.message = "Running";
-
-        if (this.oldPoint == null){ this.oldPoint = this.currentPoint; }
-
+        if (this.oldPoint == null ) { this.track.points.push(this.currentPoint); return; }
         this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
 
         //store
-        if ((this.currentPoint.latitudeInM == this.oldPoint.latitudeInM) && (this.currentPoint.altitudeInM == this.oldPoint.altitudeInM)){
-          this.storage.set('point', this.currentPoint);
+         if (
+          (this.currentPoint.getLatitude(5) != this.oldPoint.getLatitude(5)) || 
+          (this.currentPoint.getLongitude(5) != this.oldPoint.getLongitude(5))){
+            this.track.points.push(this.oldPoint);
         }
-
-        console.log(this.storage.get('point'));
       },
       (error) => {
         this.message = error.message;
@@ -81,5 +92,15 @@ export class HomePage {
     this.isRunning = false;
     this.timer.stop();
     this.watcher.unsubscribe(); 
+    // store
+    this.tracks.push(this.track);
+    console.log(this.tracks);
+    // ???? must be then and catch
+    this.storage.set('tracks', this.tracks);
+  }
+
+  clearStorage(){
+    this.storage.clear();
+    this.tracks = new Array<GeoTrack>();
   }
 }

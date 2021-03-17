@@ -19,12 +19,6 @@ export class GeoPoint {
       this._timestamp = timestamp;
     }
 
-    public get speedToKm() { return (this._speed * 3.6).toFixed(3); }
-    public get speedToMs() { return (this._speed).toFixed(3); }
-    public get latitudeInM() { return this._latitude.toFixed(5); }
-    public get longitudeInM() { return this._longitude.toFixed(5); }
-    public get altitudeInM() { return this._altitude.toFixed(0); }
-
     public get latitude() { return this._latitude; }
     public get longitude() { return this._longitude; }
     public get altitude() { return this._altitude; }
@@ -33,4 +27,32 @@ export class GeoPoint {
     public get speed() { return this._speed; }
     public get heading() { return this._heading; }
     public get timestamp() { return this._timestamp; }
+
+    public getLatitude(precision: number = 5){
+      return this._latitude != null ? this._latitude.toFixed(precision) : "NaN";
+    }
+
+    public getLongitude(precision: number = 5){
+      return this._longitude != null ? this._longitude.toFixed(precision) : "NaN";
+    }
+    
+    public getAltitude(precision: number = 5){
+      return this._altitude != null ? this._altitude.toFixed(precision) : "NaN";
+    }
+
+    public getSpeedToKm(precision: number = 3){
+      return this._speed != null ? (this._speed * 3.6).toFixed(precision) : "NaN";
+    }
+
+    public getSpeedToM(precision: number = 3){
+      return this._speed != null ? this._speed.toFixed(precision) : "NaN";
+    }
+
+    public getHeading(precision: number = 3){
+      return this._heading != null ? this._heading.toFixed(precision) : "NaN";
+    }
+    
+    public getAccuracy(precision: number = 3){
+      return this._accuracy != null ? this._accuracy.toFixed(precision) : "NaN";
+    }
   }
