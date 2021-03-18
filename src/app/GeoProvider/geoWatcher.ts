@@ -76,6 +76,7 @@ export class GeoWatcher{
         this.isRunning = true;
         if (this.state.toString() == GeoWatcherSate.Watching) { return; }
         if (this.state.toString() == GeoWatcherSate.Ready) { this._init(); }
+        if (this.state.toString() == GeoWatcherSate.Stop) { this._init(); }
         this.timer.start();
         if (this.state.toString() == GeoWatcherSate.Pause) { return; }
         if (this.state.toString() == GeoWatcherSate.Suspend) { return; }

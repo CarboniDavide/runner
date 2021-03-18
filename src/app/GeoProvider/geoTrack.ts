@@ -8,7 +8,7 @@ export class GeoTrack {
 
     constructor(name:string|null=null, timestamp:number|null=null, points:Array<GeoPoint>|null=null){
         this.startAt = (timestamp == null) ? new Date().getTime() : timestamp;
-        this.name = (name == null) ? "Track_"+this.startAt : name;
+        this.name = (name == null) ? "track_"+this.startAt : name;
         this.points = (points == null) ? new Array<GeoPoint>() : points;
     }
 }
