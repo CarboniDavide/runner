@@ -2,6 +2,7 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { GeoStorage } from '../GeoProvider/geoStorage';
 import { GeoTrack } from '../GeoProvider/geoTrack';
 import { Router } from '@angular/router';
+import { GeoWatcher } from '../GeoProvider/geoWatcher';
 
 @Component({
   selector: 'app-tracks',
@@ -12,7 +13,7 @@ export class TracksPage{
 
   tracks: Array<GeoTrack> = new Array<GeoTrack>();
 
-  constructor(public geoStorage: GeoStorage, private route: Router){
+  constructor(public geoStorage: GeoStorage, private route: Router, public g: GeoWatcher){
     this.tracks = this.geoStorage.tracks;
   }
 

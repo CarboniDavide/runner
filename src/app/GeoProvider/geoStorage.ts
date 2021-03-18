@@ -16,9 +16,7 @@ export class GeoStorage {
     public getFromStorage(){
       this.tracks = new Array<GeoTrack>();
       this.storage.get('tracks').then((res) => {
-        let mm = (res == null) ? new Array<GeoTrack>(): res;
-        console.log(res);
-        mm.map(track => this.tracks.push(new GeoTrack(track._name, track._date, track._points)));
+        this.tracks = (res == null) ? new Array<GeoTrack>(): res;
       }).catch((err)=> {
       });
     }
@@ -30,5 +28,14 @@ export class GeoStorage {
 
     public set(key:string, value:any){
       this.storage.set(key, value);
+    }
+
+    public addTrack(track: GeoTrack){
+      this.tracks.push(track);
+      this.store();
+    }
+
+    public store(){
+      this.storage.set('tracks', this.tracks);
     }
 }

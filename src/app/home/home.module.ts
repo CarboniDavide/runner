@@ -7,6 +7,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { GeoStorage } from '../GeoProvider/geoStorage';
 import { Geolocator } from '../GeoProvider/geolocator';
+import { GeoWatcher } from '../GeoProvider/geoWatcher';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { Geolocator } from '../GeoProvider/geolocator';
     HomePageRoutingModule
   ],
   declarations: [HomePage],
-  providers: [ GeoStorage, Geolocator ]
+  providers: [ GeoStorage, Geolocator, GeoWatcher ]
 })
 export class HomePageModule {}

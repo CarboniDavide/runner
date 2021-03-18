@@ -52,9 +52,8 @@ export class MapPage implements OnInit, OnDestroy {
 
     let latlngs: any = [];
   
-    this.geoStorage.cTrack.points.forEach(point => {
-      let p:any = point;
-      latlngs.push([p._latitude, p._longitude]);
+    this.geoStorage.cTrack.points.forEach(p => {
+      latlngs.push([p.latitude, p.longitude]);
     });
 
 
