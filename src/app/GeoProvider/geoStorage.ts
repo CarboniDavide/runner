@@ -7,7 +7,6 @@ export class GeoStorage {
 
     public tracks: Array<GeoTrack> = new Array<GeoTrack>();
     public cTrack: GeoTrack;
-    public isStoring: Boolean = false;
 
     constructor(private storage: Storage,) {
         this.getFromStorage();

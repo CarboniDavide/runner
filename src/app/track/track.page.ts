@@ -33,6 +33,6 @@ export class TrackPage {
 
   pauseLocation() {
     this.isRunning=false;
-    this.geoWatcher.suspend();
+    this.geoWatcher.suspend ();
   }
 }

@@ -1,13 +1,40 @@
 <ion-content>
-  <div class="ion-padding">  
-    <ion-list>
-      <ion-item *ngFor="let track of tracks" (click)="showTrack(track.name)" [attr.disabled]="this.geoStorage.isStoring"> {{ track.name }} </ion-item>
-    </ion-list>
-  </div>
+
+  <ion-card *ngFor="let track of tracks" (click)="geoWatcher.isRunning ? null : showTrack(track.name)">
+    <ion-card-header>
+      <ion-card-subtitle>
+        <ion-note>
+          {{ getTime(track.startAt) }}
+        </ion-note>
+      </ion-card-subtitle>
+      <ion-card-title>{{ getDuration(track) }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      Keep close to Nature's heart... and break clear away, once in awhile,
+      and climb a mountain or spend a week in the woods. Wash your spirit clean.
+
+      <ion-row>
+        <ion-col center text-center>
+          <ion-icon name="barbell-outline"></ion-icon>
+        </ion-col>
+        
+        <ion-col center text-center>
+          <ion-note>
+            11h ago
+          </ion-note>
+        </ion-col>
+      </ion-row>
+
+    </ion-card-content>
+
+  </ion-card>
+
 </ion-content>
+
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button color="warning" (click)="clearStorage()" expand="block" [attr.disabled]="this.geoStorage.isStoring"> Clear Data </ion-button>
+    <ion-button color="warning" (click)="clearStorage()" expand="block" [attr.disabled]="this.geoWatcher.isRunning"> Clear Data </ion-button>
   </ion-toolbar>
 </ion-footer> 

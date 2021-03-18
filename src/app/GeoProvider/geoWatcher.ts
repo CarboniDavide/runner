@@ -19,7 +19,7 @@ export enum GeoWatcherSate {
 @Injectable()
 export class GeoWatcher{
 
-    readonly DEFAULAT_MAX_ACCURACY = 20;
+    readonly DEFAULAT_MAX_ACCURACY = 30;
 
     currentPoint: GeoPoint;
     oldPoint: GeoPoint;
@@ -31,6 +31,7 @@ export class GeoWatcher{
     totalDistance: number = 0;
     track: GeoTrack = null;
     timer: Timer = new Timer();
+    isRunning: Boolean = false;
 
     constructor(private geolocator: Geolocator){}
 
@@ -72,6 +73,7 @@ export class GeoWatcher{
     }
 
     start(){
+        this.isRunning = true;
         if (this.state.toString() == GeoWatcherSate.Watching) { return; }
         if (this.state.toString() == GeoWatcherSate.Ready) { this._init(); }
         this.timer.start();
@@ -81,18 +83,22 @@ export class GeoWatcher{
     }
 
     stop(){
+        this.isRunning = false;
         this.state = GeoWatcherSate.Stop;
+        this.track.endAt = new Date().getTime();
         if (this.timer != null) { this.timer.stop(); }
         if (this.watcher != null) { this.watcher.unsubscribe(); }
     }
 
     suspend(){
+        this.isRunning = false;
         this.state = GeoWatcherSate.Suspend;
         if (this.timer != null) { this.timer.suspend(); }
         if (this.watcher != null) { this.watcher.unsubscribe(); }
     }
 
     pause(){
+        this.isRunning = false;
         this.state = GeoWatcherSate.Pause;
         if (this.timer != null) { this.timer.pause(); }
         if (this.watcher != null) { this.watcher.unsubscribe(); }
