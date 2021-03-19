@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GeoWatcher } from '../GeoProvider/geoWatcher';
 
 @Component({
   selector: 'app-about',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutPage implements OnInit {
 
-  constructor() { }
+  constructor(public geoWatcher: GeoWatcher) { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  getAccuracy(event){
+    this.geoWatcher.maxAccuracy = event.detail.value;
+    if (this.geoWatcher.isRunning) { 
+      this.geoWatcher.stop(); 
+      this.geoWatcher.start();
+    }
   }
-
 }

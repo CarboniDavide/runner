@@ -6,6 +6,12 @@
 
 <ion-content>
 
-  <p>Davide Carboni</p>
+  <ion-item>
+    Accuracy
+    <ion-range min="5" max="30" color="secondary" [value]="geoWatcher.maxAccuracy" (ionChange)="getAccuracy($event)">
+      <ion-label slot="start">5</ion-label>
+      <ion-label slot="end">30</ion-label>
+    </ion-range>
+  </ion-item>
 
 </ion-content>

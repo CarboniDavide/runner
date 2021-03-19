@@ -29,7 +29,7 @@
         <ion-label>
           Accuracy
         </ion-label>
-        <ion-badge color="danger" slot="end">{{geoWatcher.currentPoint == null ? 0 :  geoWatcher.currentPoint.getAccuracy()}}</ion-badge>
+        <ion-badge color="danger" slot="end">{{ geoWatcher.maxAccuracy}} / {{geoWatcher.currentPoint == null ? 0 :  geoWatcher.currentPoint.getAccuracy()}}</ion-badge>
       </ion-item>
       <ion-item>
         <ion-label>

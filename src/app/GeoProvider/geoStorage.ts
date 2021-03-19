@@ -16,6 +16,7 @@ export class GeoStorage {
       this.tracks = new Array<GeoTrack>();
       this.storage.get('tracks').then((res) => {
         this.tracks = (res == null) ? new Array<GeoTrack>(): res;
+        console.log(this.tracks);
       }).catch((err)=> {
       });
     }

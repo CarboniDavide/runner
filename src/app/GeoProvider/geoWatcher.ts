@@ -39,7 +39,6 @@ export class GeoWatcher{
         this.track = new GeoTrack();
         this.totalDistance = 0;
         this.state = GeoWatcherSate.Ready;
-        this.maxAccuracy = this.DEFAULAT_MAX_ACCURACY;
         this.error = null;
         if (this.timer != null) { this.timer.stop(); }
         this.timer = new Timer();
