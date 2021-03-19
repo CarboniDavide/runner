@@ -1,10 +1,10 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { GeoStorage } from '../GeoProvider/geoStorage';
-import { GeoTrack } from '../GeoProvider/geoTrack';
+import { GeoStorage } from '../providers/geoLocator/geoStorage';
+import { GeoTrack } from '../providers/geoLocator/geoTrack';
 import { Router } from '@angular/router';
-import { GeoWatcher } from '../GeoProvider/geoWatcher';
-import { GeoPoint } from '../GeoProvider/geoPoint';
+import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 import { Time } from 'jts-timer';
+import { Exchanger } from '../providers/exchanger';
 
 @Component({
   selector: 'app-tracks',
@@ -15,7 +15,12 @@ export class TracksPage{
 
   tracks: Array<GeoTrack> = new Array<GeoTrack>();
 
-  constructor(public geoStorage: GeoStorage, private route: Router, public geoWatcher: GeoWatcher){
+  constructor(
+    public geoStorage: GeoStorage, 
+    private route: Router, 
+    public geoWatcher: GeoWatcher, 
+    public exchanger: Exchanger 
+  ){
     this.tracks = this.geoStorage.tracks;
   }
 
@@ -25,7 +30,7 @@ export class TracksPage{
   }
 
   showTrack(name){
-    this.geoStorage.cTrack = this.tracks.find(el => el.name == name);
+    this.exchanger.selecteTrack = this.tracks.find(el => el.name == name);
     this.route.navigate(['/home/map']);
   }
 

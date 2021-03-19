@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { GeoStorage } from '../GeoProvider/geoStorage';
-import { Geolocator } from '../GeoProvider/geolocator';
-import { GeoWatcher } from '../GeoProvider/geoWatcher';
+import { GeoStorage } from '../providers/geoLocator/geoStorage';
+import { GeoLocator } from '../providers/geoLocator/geoLocator';
+import { Exchanger } from '../providers/exchanger';
+import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { GeoWatcher } from '../GeoProvider/geoWatcher';
     HomePageRoutingModule
   ],
   declarations: [HomePage],
-  providers: [ GeoStorage, Geolocator, GeoWatcher ]
+  providers: [ GeoStorage, GeoLocator, GeoWatcher, Exchanger ]
 })
 export class HomePageModule {}

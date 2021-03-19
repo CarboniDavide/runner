@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import * as Leaflet from 'leaflet';
-import { Geolocator } from '../GeoProvider/geolocator';
-import { GeoPoint } from '../GeoProvider/geoPoint';
-import { GeoStorage } from '../GeoProvider/geoStorage';
+import { Exchanger } from '../providers/exchanger';
+import { GeoPoint } from '../providers/geoLocator/geoPoint';
+import { GeoStorage } from '../providers/geoLocator/geoStorage';
+import { GeoTrack } from '../providers/geoLocator/geoTrack';
 
 @Component({
   selector: 'app-map',
@@ -30,7 +31,7 @@ export class MapPage implements OnInit, OnDestroy {
     minZoom: 3
   }
 
-  constructor(public geoStorage: GeoStorage, public geolocator: Geolocator) { }
+  constructor(public geoStorage: GeoStorage, private exchanger: Exchanger) { }
   
   ionViewDidEnter(): void {
     this.leafletMap();
@@ -48,11 +49,12 @@ export class MapPage implements OnInit, OnDestroy {
     // let p = this.geolocator.lastPosition;
     // Leaflet.circle(p.latitude, p.longitude.toString()).addTo(this.map);
 
-    if (this.geoStorage.cTrack == null) { return; }
+    if (this.exchanger.selecteTrack == null) { return; }
 
     let latlngs: any = [];
   
-    this.geoStorage.cTrack.points.forEach(p => {
+    console.log(this.exchanger.selecteTrack);
+    this.exchanger.selecteTrack.points.forEach(p => {
       latlngs.push([p.latitude, p.longitude]);
     });
 

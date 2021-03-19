@@ -2,7 +2,7 @@ import { GeolibInputCoordinates } from 'geolib/es/types';
 import { Timer } from 'jts-timer';
 import { GeoPoint } from './geoPoint';
 import { getCenter, getDistance } from 'geolib';
-import { Geolocator } from './geolocator';
+import { GeoLocator } from './geoLocator';
 
 export class GeoUtils {
 
@@ -18,7 +18,7 @@ export class GeoUtils {
         let promise = new Promise<Array<GeoPoint>>((resolve, reject) => {
           let points: Array<GeoPoint> = [];
           let timer: Timer = new Timer(100);
-          let geolocator: Geolocator = new Geolocator();
+          let geolocator: GeoLocator = new GeoLocator();
 
           timer.onClock = () => {
     

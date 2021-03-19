@@ -1,9 +1,9 @@
 import { GeoPoint } from './geoPoint';
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
-import { GeolocatorProvider } from './geolocatorProvider';
+import { GeoLocatorProvider } from './geoLocatorProvider';
 import { Observable } from 'rxjs';
 
-export class IonicNativeLocatorProvider extends GeolocatorProvider {
+export class IonicNativeLocatorProvider extends GeoLocatorProvider {
 
   private _geolocation: Geolocation;
   private _geoOptions: GeolocationOptions;

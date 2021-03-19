@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Storage } from '@ionic/storage';
-import { GeoTrack } from "../GeoProvider/geoTrack";
+import { GeoTrack } from "./geoTrack";
 
 @Injectable()
 export class GeoStorage {
 
     public tracks: Array<GeoTrack> = new Array<GeoTrack>();
-    public cTrack: GeoTrack;
 
-    constructor(private storage: Storage,) {
+    constructor(private storage: Storage) {
         this.getFromStorage();
     }
 
@@ -16,7 +15,6 @@ export class GeoStorage {
       this.tracks = new Array<GeoTrack>();
       this.storage.get('tracks').then((res) => {
         this.tracks = (res == null) ? new Array<GeoTrack>(): res;
-        console.log(this.tracks);
       }).catch((err)=> {
       });
     }

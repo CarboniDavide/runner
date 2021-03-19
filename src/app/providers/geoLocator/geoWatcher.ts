@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Timer } from "jts-timer";
 import { Subscription } from "rxjs";
-import { Geolocator } from "./geolocator";
+import { GeoLocator } from "./geoLocator";
 import { GeoPoint } from "./geoPoint";
 import { GeoTrack } from "./geoTrack";
 import { GeoUtils } from "./geoUtils";
@@ -33,7 +33,7 @@ export class GeoWatcher{
     timer: Timer = new Timer();
     isRunning: Boolean = false;
 
-    constructor(private geolocator: Geolocator){}
+    constructor(private geolocator: GeoLocator){}
 
     private _init(){
         this.track = new GeoTrack();

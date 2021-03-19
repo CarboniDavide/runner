@@ -1,20 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GeolocatorProvider } from "./geolocatorProvider";
+import { GeoLocatorProvider } from "./geoLocatorProvider";
 import { GeoPoint } from "./geoPoint";
 import { IonicNativeLocatorProvider } from "./ionicNativeLocatorProvider";
 
 class GeoLocatorFactory {
 
-    static getGeolocatorProvider(): GeolocatorProvider {
+    static getGeolocatorProvider(): GeoLocatorProvider {
         return new IonicNativeLocatorProvider();
     }
 }
 
 @Injectable()
-export class Geolocator {
+export class GeoLocator {
 
-    geoProvider: GeolocatorProvider;
+    geoProvider: GeoLocatorProvider;
     lastPosition: GeoPoint;
 
     constructor() {

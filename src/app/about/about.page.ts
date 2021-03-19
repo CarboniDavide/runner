@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GeoWatcher } from '../GeoProvider/geoWatcher';
+import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 
 @Component({
   selector: 'app-about',

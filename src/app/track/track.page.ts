@@ -1,13 +1,7 @@
-import { ThisReceiver } from '@angular/compiler';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Timer, TimerState } from 'jts-timer';
-import { Subscription } from 'rxjs';
-import { Geolocator } from '../GeoProvider/geolocator';
-import { GeoPoint } from '../GeoProvider/geoPoint';
-import { GeoStorage } from '../GeoProvider/geoStorage';
-import { GeoTrack } from '../GeoProvider/geoTrack';
-import { GeoUtils } from '../GeoProvider/geoUtils';
-import { GeoWatcher, GeoWatcherSate } from '../GeoProvider/geoWatcher';
+import { Component } from '@angular/core';
+import { Exchanger } from '../providers/exchanger';
+import { GeoStorage } from '../providers/geoLocator/geoStorage';
+import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 
 @Component({
   selector: 'app-track',
@@ -18,7 +12,7 @@ export class TrackPage {
 
   isRunning: boolean = false;
 
-  constructor( private geoStorage: GeoStorage, public geoWatcher: GeoWatcher ){}
+  constructor( private geoStorage: GeoStorage, public geoWatcher: GeoWatcher){}
 
   traceLocation() {
     this.geoWatcher.start();
