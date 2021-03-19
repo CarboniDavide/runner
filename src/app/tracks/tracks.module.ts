@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { TracksPageRoutingModule } from './tracks-routing.module';
 
 import { TracksPage } from './tracks.page';
+import { ActivityCardComponent } from '../components/activity-card/activity-card.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { TracksPage } from './tracks.page';
     IonicModule,
     TracksPageRoutingModule
   ],
-  declarations: [TracksPage]
+  declarations: [TracksPage, ActivityCardComponent]
 })
 export class TracksPageModule {}

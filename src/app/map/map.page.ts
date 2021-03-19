@@ -53,7 +53,6 @@ export class MapPage implements OnInit, OnDestroy {
 
     let latlngs: any = [];
   
-    console.log(this.exchanger.selecteTrack);
     this.exchanger.selecteTrack.points.forEach(p => {
       latlngs.push([p.latitude, p.longitude]);
     });

@@ -1,9 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
 import { GeoTrack } from '../providers/geoLocator/geoTrack';
-import { Router } from '@angular/router';
 import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
-import { Time } from 'jts-timer';
 import { Exchanger } from '../providers/exchanger';
 
 @Component({
@@ -17,32 +15,33 @@ export class TracksPage{
 
   constructor(
     public geoStorage: GeoStorage, 
-    private route: Router, 
     public geoWatcher: GeoWatcher, 
     public exchanger: Exchanger 
   ){
     this.tracks = this.geoStorage.tracks;
   }
 
-  clearStorage(){
-    this.geoStorage.clear();
+  ionViewDidEnter(): void {
     this.tracks = this.geoStorage.tracks;
   }
 
-  showTrack(name){
-    this.exchanger.selecteTrack = this.tracks.find(el => el.name == name);
-    this.route.navigate(['/home/map']);
+  getTotalDistance(): number{
+    let totalDistance = 0;
+    this.tracks.forEach( el =>{
+      totalDistance = totalDistance + el.distance;
+    });
+    return totalDistance;
   }
 
-  getTime(time:number): any{
-    let data = new Date(time);
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    return data.getDate().toString() + " " +  months[data.getMonth()] + " " + data.getFullYear().toString();
-  }
-
-  getDuration(track:GeoTrack){
-    let time = new Time(track.startAt, track.endAt);
-    return time.hours.toString() + " h " +  time.minutes.toString() + " m " +  time.seconds.toString() + " s ";
+  doRefresh(event) {
+    let escape: boolean = false;
+    let waiter = setTimeout(() => {
+      if (escape) { event.target.complete(); }
+    }, 10000);
+    this.tracks = this.geoStorage.tracks;
+    escape = true;
+    event.target.complete();
+    clearTimeout(waiter);
   }
 }
 

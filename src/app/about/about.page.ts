@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+import { GeoStorage } from '../providers/geoLocator/geoStorage';
 import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 
 @Component({
@@ -8,7 +10,11 @@ import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 })
 export class AboutPage implements OnInit {
 
-  constructor(public geoWatcher: GeoWatcher) { }
+  constructor(
+    public geoWatcher: GeoWatcher, 
+    private geoStorage: GeoStorage, 
+    private alertController: AlertController
+  ) { }
 
   ngOnInit() {}
 
@@ -19,4 +25,28 @@ export class AboutPage implements OnInit {
       this.geoWatcher.start();
     }
   }
+
+  clearStorage(){
+    this.geoStorage.clear();
+  }
+
+  async confirmDelete() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Storage Delete',
+      message: 'Are you sure?',
+      buttons: [
+        {
+          text: 'Cancel'
+        },
+        {
+          text : 'Delete',
+          handler: this.clearStorage.bind(this)
+        }
+        ]
+    });
+
+    await alert.present();
+  }
+
 }

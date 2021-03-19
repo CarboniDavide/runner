@@ -1,0 +1,33 @@
+<ion-card (click)="geoWatcher.isRunning ? null : showTrack()">
+  <ion-card-header>
+
+    <ion-row>
+      <ion-col>
+        <ion-note>
+          {{ getTime(track.startAt) }}
+        </ion-note>
+      </ion-col>
+      <ion-col class="ion-text-end">
+        <ion-icon name="albums-outline"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <ion-row>
+      <ion-col class="ion-text-center">
+          <ion-icon name="bicycle-outline" size="large"></ion-icon>
+      </ion-col>
+      <ion-col class="ion-text-center">
+        <ion-icon name="alarm-outline"></ion-icon><br>
+          {{ getDuration(track) }}
+      </ion-col>
+      <ion-col class="ion-text-center">
+        <ion-icon name="navigate-outline"></ion-icon><br>
+        {{ track.distance }} Km
+      </ion-col>
+    </ion-row>
+    
+  </ion-card-content>
+</ion-card>
