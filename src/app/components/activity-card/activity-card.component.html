@@ -1,4 +1,4 @@
-<ion-card (click)="geoWatcher.isRunning ? null : showTrack()">
+<ion-card>
   <ion-card-header>
 
     <ion-row>
@@ -8,26 +8,28 @@
         </ion-note>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-icon name="albums-outline"></ion-icon>
+        <ion-icon name="albums-outline" (click)="geoWatcher.isRunning ? null : showTrack()"></ion-icon>
       </ion-col>
     </ion-row>
+
   </ion-card-header>
 
   <ion-card-content>
 
     <ion-row>
-      <ion-col class="ion-text-center">
-          <ion-icon name="bicycle-outline" size="large"></ion-icon>
+      <ion-col class="ion-text-center" size="4">
+          <ion-img src="../../../assets/icon/running-man.png" id="activity-image" class="h-50"></ion-img>
       </ion-col>
-      <ion-col class="ion-text-center">
-        <ion-icon name="alarm-outline"></ion-icon><br>
-          {{ getDuration(track) }}
+      <ion-col class="ion-text-center " size="4">
+        <ion-icon name="alarm-outline" class="icon-size-32"></ion-icon><br>
+          {{ getDuration() }}
       </ion-col>
-      <ion-col class="ion-text-center">
-        <ion-icon name="navigate-outline"></ion-icon><br>
-        {{ track.distance }} Km
+      <ion-col class="ion-text-center" size="4">
+        <ion-icon name="analytics-outline" class="icon-size-32"></ion-icon><br>
+        {{ getDistance() }} Km
       </ion-col>
     </ion-row>
     
   </ion-card-content>
+  
 </ion-card>

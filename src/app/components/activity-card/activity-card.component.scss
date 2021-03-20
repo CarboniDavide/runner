@@ -1,0 +1,41 @@
+ion-card-header{
+    background-color: lightgreen;
+}
+
+ion-card-content{
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+ion-card-header{
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+
+#activity-image-container{
+    position: relative;
+    height: 100px;
+    width: 100%;
+}
+
+#activity-image{
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.icon-size-32 {
+    font-size: 25px;
+}
+
+.h-70{
+    height: 57px;
+}
+
+.h-50{
+    height: 50px;
+}
+
+.h-40{
+    height: 40px;
+}

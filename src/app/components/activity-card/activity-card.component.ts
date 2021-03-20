@@ -32,9 +32,13 @@ export class ActivityCardComponent implements OnInit {
     return data.getDate().toString() + " " +  months[data.getMonth()] + " " + data.getFullYear().toString();
   }
 
-  getDuration(track:GeoTrack){
-    let time = new Time(track.startAt, track.endAt);
+  getDuration(){
+    let time = new Time(this.track.startAt, this.track.endAt);
     return time.hours.toString() + " h " +  time.minutes.toString() + " m " +  time.seconds.toString() + " s ";
+  }
+
+  getDistance(){
+    return (this.track.distance * 0.001).toFixed(3);
   }
 
 }

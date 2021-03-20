@@ -25,12 +25,12 @@ export class TracksPage{
     this.tracks = this.geoStorage.tracks;
   }
 
-  getTotalDistance(): number{
-    let totalDistance = 0;
+  getTotalDistance(): string{
+    let totalDistance: number = 0;
     this.tracks.forEach( el =>{
-      totalDistance = totalDistance + el.distance;
+      totalDistance = ((totalDistance + el.distance) * 0.001);
     });
-    return totalDistance;
+    return totalDistance.toFixed(3);
   }
 
   doRefresh(event) {
