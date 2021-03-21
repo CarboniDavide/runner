@@ -19,7 +19,10 @@ export class ActivityCardComponent implements OnInit {
     public geoWatcher: GeoWatcher
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() { 
+    let mm = this.track;
+    this.track = new GeoTrack(mm.name, mm.startAt, mm.endAt, mm.points);
+  }
 
   showTrack(){
     this.exchanger.selecteTrack = this.track;
@@ -28,7 +31,7 @@ export class ActivityCardComponent implements OnInit {
 
   getTime(time:number): any{
     let data = new Date(time);
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return data.getDate().toString() + " " +  months[data.getMonth()] + " " + data.getFullYear().toString();
   }
 
@@ -38,7 +41,7 @@ export class ActivityCardComponent implements OnInit {
   }
 
   getDistance(){
-    return (this.track.distance * 0.001).toFixed(3);
+    return ( this.track.distance.toFixed(3) );
   }
 
 }

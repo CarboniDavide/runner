@@ -56,8 +56,7 @@ export class GeoWatcher{
             this.geolocator.lastPosition = res;
             this.state = GeoWatcherSate.Watching;
             if (this.oldPoint == null ) { this.track.points.push(this.currentPoint); return; }
-            this.totalDistance = this.totalDistance + GeoUtils.getDistance(this.oldPoint, this.currentPoint);
-            this.track.distance = this.totalDistance;
+            this.totalDistance = this.totalDistance + this.track.getABDistance(this.oldPoint, this.currentPoint);
 
             //store
             if (
