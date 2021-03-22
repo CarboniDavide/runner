@@ -1,0 +1,20 @@
+:host {
+    display: block;
+}
+
+:host #round-button-container{
+    border-radius: 50%;
+}
+
+.play {
+    width: 0;
+    height: 0;
+    border-left: 100px solid blue;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-radius: 5%;
+ }
+
+ :host #round-button-shape{
+     height: 50%;
+ }
