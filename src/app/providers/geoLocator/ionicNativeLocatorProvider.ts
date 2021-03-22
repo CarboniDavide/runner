@@ -11,7 +11,7 @@ export class IonicNativeLocatorProvider extends GeoLocatorProvider {
   constructor(){
     super();
     this._geolocation = new Geolocation();
-    this._geoOptions = { enableHighAccuracy: true, maximumAge: 0 }
+    this._geoOptions = { enableHighAccuracy: true, maximumAge: 1000 }
   }  
   
   async getCordinates(): Promise <GeoPoint|any> {
