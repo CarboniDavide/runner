@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Time } from 'jts-timer';
 import { Exchanger } from 'src/app/providers/exchanger';
@@ -10,7 +10,7 @@ import { GeoWatcher } from 'src/app/providers/geoLocator/geoWatcher';
   templateUrl: './activity-card.component.html',
   styleUrls: ['./activity-card.component.scss'],
 })
-export class ActivityCardComponent implements OnInit {
+export class ActivityCardComponent implements OnInit, AfterViewInit {
   @Input() track: GeoTrack;
 
   isOpened: boolean = false;
@@ -22,6 +22,14 @@ export class ActivityCardComponent implements OnInit {
     private _renderer: Renderer2,
     private _element: ElementRef
   ) { }
+
+  ngAfterViewInit(): void {
+    let el = this._element.nativeElement.querySelector("#card-action-buttons");
+    let button = this._element.nativeElement.querySelector("#icon-actions-open");
+    this._renderer.listen(el, "transitionend", () => {
+      this._renderer.setStyle(button, "transform", this.isOpened ? "rotate(180deg)" : "rotate(-0deg)");
+    });
+  }
 
   ngOnInit() { 
     let mm = this.track;
