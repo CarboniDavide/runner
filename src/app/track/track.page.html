@@ -1,10 +1,5 @@
 <ion-content>
   <div class="ion-padding">
-
-    <app-round-buttom
-      [size]="50"
-    ></app-round-buttom>
-
     <ion-list>
       <ion-item>
         <ion-label>
@@ -65,8 +60,9 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-button *ngIf="!isRunning" (click)="traceLocation()" expand="block" > Start </ion-button>
-    <ion-button *ngIf="isRunning"  (click)="stopLocation()"  expand="block" > Stop  </ion-button>
+  <ion-toolbar class="ion-text-center">
+      <app-round-buttom *ngIf="!isRunning" (click)="traceLocation()" [size]="70" [type]="'play'" [color]="'rgba(127,195,113,1)'" [contentColor]="'white'"></app-round-buttom>
+      <app-round-buttom *ngIf="isRunning" [size]="70" [enableChargeAnimation]="true" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [contentColor]="'white'" (fullCircle)="onFullCircle($event)"></app-round-buttom>
+      <app-round-buttom *ngIf="isRunning" [size]="70" [type]="'pause'" [color]="'rgba(122,129,255,1)'" [contentColor]="'white'"></app-round-buttom>
   </ion-toolbar>
 </ion-footer> 

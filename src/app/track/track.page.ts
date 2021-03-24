@@ -29,4 +29,8 @@ export class TrackPage {
     this.isRunning=false;
     this.geoWatcher.suspend ();
   }
+
+  onFullCircle(event){
+    if (event) { this.stopLocation()}
+  }
 }

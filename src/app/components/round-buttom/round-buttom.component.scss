@@ -1,20 +1,7 @@
-:host {
-    display: block;
+svg:hover #circle-cover{
+    fill: rgba(158, 135, 135, 0.2);
 }
 
-:host #round-button-container{
-    border-radius: 50%;
+.convertable{
+    transition: ease-in-out 0.5s;
 }
-
-.play {
-    width: 0;
-    height: 0;
-    border-left: 100px solid blue;
-    border-top: 50px solid transparent;
-    border-bottom: 50px solid transparent;
-    border-radius: 5%;
- }
-
- :host #round-button-shape{
-     height: 50%;
- }
