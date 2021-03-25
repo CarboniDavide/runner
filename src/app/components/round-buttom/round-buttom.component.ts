@@ -11,11 +11,13 @@ export class RoundButtomComponent implements AfterViewInit {
   readonly DISABLED: boolean = false;
   readonly FILL_DURATION: number = 3;
   readonly RESTORE_DURATION: number = 0.3;
-  readonly FILL_ANIMATION: string = "ease-in-out";
+  readonly FILL_ANIMATION: string = "ease-out";
   readonly RESTORE_ANIMATION: string = "ease-in-out";
   readonly START_AT: number = 0;
   readonly END_AT: number = 360;
   readonly REDUCE_RADIUS: number = 39;
+  readonly RADIUS_ANIMATION_DURATION: number = 0.3;
+  readonly RADIUS_ANIMATION: string = "ease-in-out";
   readonly TYPE: ButtonType = ButtonType.stop;
   readonly COLOR: any = "Black"
   readonly CONTENT_COLOR: any ="white";
@@ -32,6 +34,8 @@ export class RoundButtomComponent implements AfterViewInit {
   @Input() startAt: number = this.START_AT;
   @Input() endAt: number = this.END_AT;
   @Input() reduceRadius: number = this.REDUCE_RADIUS;
+  @Input() radiusAnimationDuration: number = this.RADIUS_ANIMATION_DURATION;
+  @Input() radiusAnimation: string = this.RADIUS_ANIMATION;
   @Input() type: ButtonType | string = this.TYPE;
   @Input() color: any = this.COLOR;
   @Input() contentColor: any = this.CONTENT_COLOR;
@@ -62,10 +66,13 @@ export class RoundButtomComponent implements AfterViewInit {
 
     this._renderer.listen(this._element.nativeElement, "touchstart", this.onTouchstart.bind(this));
     this._renderer.listen(this._element.nativeElement, "touchend", this.onTouchEnd.bind(this));
+
     this._renderer.setStyle(this._circleWpr, "transition", "none");
     this._renderer.setStyle(this._circleWpr, "stroke-dashoffset", this._getRadius(this.startAt));
-    this._renderer.setStyle(this._circleCld, "transition", "ease-in-out 0.3s");
-    this._renderer.setStyle(this._circleCcover, "transition", "ease-in-out 0.3s");
+
+    this._renderer.setStyle(this._circleCld, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._circleCcover, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+
     this._renderer.listen(this._circleWpr, "transitionend", this.transitionEnd.bind(this));
   }
 
@@ -73,15 +80,12 @@ export class RoundButtomComponent implements AfterViewInit {
     this.endAt = this.endAt > 360 ? this.END_AT : this.endAt;
     this.startAt = this.startAt > 360 ? this.START_AT : this.startAt;
     this.restoreDuration = this.restoreDuration <= 0 ? this.RESTORE_DURATION : this.restoreDuration;
-
     this.enableChargeAnimation = this.enableChargeAnimation && !this.disabled;
     this.enableChargeAnimation = this.enableChargeAnimation && (this.startAt != this.endAt);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.fillDuration > 0);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 50);
-
-    if (this.contentSVG != null){
-      this._element.nativeElement.querySelector("g").innerHTML = this.contentSVG;
-    }
+    this.enableChargeAnimation = this.enableChargeAnimation && (this.radiusAnimationDuration > 0);
+    if (this.contentSVG != null){ this._element.nativeElement.querySelector("g").innerHTML = this.contentSVG; }
   }
 
   private _getRadius(value:number) { return 360 - value;}
