@@ -10,7 +10,7 @@ import { ButtonType } from './round_button.type';
 export class RoundButtomComponent implements AfterViewInit {
   readonly DISABLED: boolean = false;
   readonly FILL_DURATION: number = 3;
-  readonly RESTORE_DURATION: number = 0.3;
+  readonly RESTORE_DURATION: number = 10;
   readonly FILL_ANIMATION: string = "ease-out";
   readonly RESTORE_ANIMATION: string = "ease-in-out";
   readonly START_AT: number = 0;
@@ -49,6 +49,9 @@ export class RoundButtomComponent implements AfterViewInit {
   private _cover: any;
   private _content: any;
 
+  private _isContentRestoring = false;
+  private _isStrokeRestoring = false;
+
   constructor(
     private _element: ElementRef,
     private _domCtrl: DomController,
@@ -63,8 +66,8 @@ export class RoundButtomComponent implements AfterViewInit {
     this._content = this._element.nativeElement.querySelector("#circle-content");
     this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
 
-    this._renderer.listen(this._element.nativeElement, "touchstart", this.onTouchstart.bind(this));
-    this._renderer.listen(this._element.nativeElement, "touchend", this.onTouchEnd.bind(this));
+    this._renderer.listen(this._element.nativeElement, "touchstart", this._onTouchstart.bind(this));
+    this._renderer.listen(this._element.nativeElement, "touchend", this._onTouchEnd.bind(this));
 
     this._renderer.setStyle(this._stroke, "transition", "none");
     this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
@@ -90,6 +93,7 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _restoreContent(){
+    this._isContentRestoring = true;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", "50%" );
       this._renderer.setStyle(this._content, "r", "50%" );
@@ -97,6 +101,7 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _reduceContent(){
+    this._isContentRestoring = false;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", this.reduceRadius + "%" );
       this._renderer.setStyle(this._content, "r", this.reduceRadius + "%" );
@@ -104,6 +109,7 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _restoreStroke(){
+    this._isStrokeRestoring = true;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.restoreAnimation + " " + this.restoreDuration + "s");
       this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt).toString() );
@@ -111,29 +117,28 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _increaseStroke(){
+    if (this._isContentRestoring) { return; }
+    this._isStrokeRestoring = false;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.fillAnimation + " " + this.fillDuration + "s");
       this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.endAt).toString() );
     });
   }
 
-  onTouchEnd(){  
+  private _onTouchEnd(){  
    this._restoreStroke();
   }
 
-  onTouchstart(){
+  private _onTouchstart(){
     this._reduceContent();
-    this._increaseStroke();
   }
 
-  _strokeTransitionEnd(){
+  private _strokeTransitionEnd(){
     this._restoreContent();
     this.onChargeComplete.emit(this._stroke.style.strokeDashoffset == (360 - this.endAt) ? true : false);
   }
 
-  _contentTransitionEnd(){
-    this._domCtrl.write(()=> {
-    });
+  private _contentTransitionEnd(){
+    this._increaseStroke();
   }
-
 }
