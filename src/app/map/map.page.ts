@@ -14,9 +14,9 @@ export class MapPage implements OnInit, OnDestroy {
 
   lastPolyline: any = null;
   map: Leaflet.Map;
-  lat: any = "46.836794";
-  lng: any = "6.552244";
-  zoomLevel: any = 13;
+  lat: any = "46.829082";
+  lng: any = "6.541396";
+  zoomLevel: any = 18;
   style: any = {
     mapNick: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     sat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',

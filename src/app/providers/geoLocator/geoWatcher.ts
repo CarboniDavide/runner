@@ -8,7 +8,7 @@ import { GeoUtils } from "./geoUtils";
 
 export enum GeoWatcherSate {
     Ready = "Ready",
-    WaitForGps = "Wait GPS Position",
+    WaitForGps = "Waiting GPS",
     Watching = "Watching",
     Aborted = "Aborted",
     Stop = "Stop",

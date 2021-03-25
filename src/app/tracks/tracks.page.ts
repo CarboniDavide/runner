@@ -27,8 +27,9 @@ export class TracksPage{
 
   getTotalDistance(): string{
     let totalDistance: number = 0;
-    this.tracks.forEach( el =>{
-      totalDistance = ((totalDistance + el.distance) * 0.001);
+    this.tracks.forEach( el => {
+      let gt: GeoTrack = new GeoTrack(el.name, el.startAt, el.endAt, el.points);
+      totalDistance = ((totalDistance + gt.distance) * 0.001);
     });
     return totalDistance.toFixed(3);
   }

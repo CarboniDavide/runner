@@ -1,6 +1,5 @@
 <svg id="button-svg" xmlns="http://www.w3.org/2000/svg" [style.width]="size" [style.height]="size" viewBox="0 0 512 512">
-  
-  <circle class="lillo" id="circle-wpr" cx="50%" cy="50%" r="46%" [style.stroke]="color" stroke-width="8%" fill="none" pathLength="360" stroke-dasharray="360" stroke-dashoffset="360" stroke-linecap="round"/>
+  <circle transform="rotate(-90 256 256)" class="lillo" id="circle-wpr" cx="50%" cy="50%" r="46%" [style.stroke]="color" stroke-width="8%" fill="none" pathLength="360" stroke-dasharray="360" stroke-dashoffset="360" stroke-linecap="round"/>
   <circle class="convertable" id="circle-cld" cx="50%" cy="50%" r="50%" [style.fill]="color"/>
 
   <rect class="button-player-content" id="button-stop" *ngIf="type=='stop'" rx="5%" ry="5%" x="33%" y="33%" height="33%" width="33%" [style.fill]="contentColor" />
@@ -10,5 +9,4 @@
   <rect class="button-player-content" id="button-pause" *ngIf="type=='pause'" rx="3%" ry="3%" x="57%" y="33%" height="33%" width="7%" [style.fill]="contentColor" />
 
   <circle class="convertable" id="circle-cover" cx="50%" cy="50%" r="50%" fill="none" />
-
 </svg>
