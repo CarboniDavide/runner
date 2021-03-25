@@ -10,7 +10,7 @@ import { ButtonType } from './round_button.type';
 export class RoundButtomComponent implements AfterViewInit {
   readonly DISABLED: boolean = false;
   readonly FILL_DURATION: number = 3;
-  readonly RESTORE_DURATION: number = 10;
+  readonly RESTORE_DURATION: number = 0.3;
   readonly FILL_ANIMATION: string = "ease-out";
   readonly RESTORE_ANIMATION: string = "ease-in-out";
   readonly START_AT: number = 0;
