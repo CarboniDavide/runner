@@ -45,9 +45,9 @@ export class RoundButtomComponent implements AfterViewInit {
   @Input() contentSVG: any = this.CONTENT_SVG;
   @Output() onChargeComplete: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  private _circleWpr: any;
-  private _circleCcover: any;
-  private _circleCld: any;
+  private _stroke: any;
+  private _cover: any;
+  private _content: any;
 
   constructor(
     private _element: ElementRef,
@@ -56,27 +56,27 @@ export class RoundButtomComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    this._checkInputValues();
+    
+    if (!this._checkInputValues()) { return; }
 
-    if (!this.enableChargeAnimation) { return; }
-
-    this._circleCcover = this._element.nativeElement.querySelector("#circle-cover");
-    this._circleCld = this._element.nativeElement.querySelector("#circle-cld");
-    this._circleWpr = this._element.nativeElement.querySelector("#circle-wpr");
+    this._cover = this._element.nativeElement.querySelector("#circle-cover");
+    this._content = this._element.nativeElement.querySelector("#circle-content");
+    this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
 
     this._renderer.listen(this._element.nativeElement, "touchstart", this.onTouchstart.bind(this));
     this._renderer.listen(this._element.nativeElement, "touchend", this.onTouchEnd.bind(this));
 
-    this._renderer.setStyle(this._circleWpr, "transition", "none");
-    this._renderer.setStyle(this._circleWpr, "stroke-dashoffset", this._getRadius(this.startAt));
+    this._renderer.setStyle(this._stroke, "transition", "none");
+    this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
 
-    this._renderer.setStyle(this._circleCld, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
-    this._renderer.setStyle(this._circleCcover, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._content, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._cover, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
 
-    this._renderer.listen(this._circleWpr, "transitionend", this.transitionEnd.bind(this));
+    this._renderer.listen(this._stroke, "transitionend", this._strokeTransitionEnd.bind(this));
+    this._renderer.listen(this._content, "transitionend", this._contentTransitionEnd.bind(this));
   }
 
-  private _checkInputValues(){
+  private _checkInputValues(): boolean{
     this.endAt = this.endAt > 360 ? this.END_AT : this.endAt;
     this.startAt = this.startAt > 360 ? this.START_AT : this.startAt;
     this.restoreDuration = this.restoreDuration <= 0 ? this.RESTORE_DURATION : this.restoreDuration;
@@ -86,30 +86,54 @@ export class RoundButtomComponent implements AfterViewInit {
     this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 50);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.radiusAnimationDuration > 0);
     if (this.contentSVG != null){ this._element.nativeElement.querySelector("g").innerHTML = this.contentSVG; }
+    return this.enableChargeAnimation;
   }
 
-  private _getRadius(value:number) { return 360 - value;}
+  private _restoreContent(){
+    this._domCtrl.write(()=> {
+      this._renderer.setStyle(this._cover, "r", "50%" );
+      this._renderer.setStyle(this._content, "r", "50%" );
+    });
+  }
+
+  private _reduceContent(){
+    this._domCtrl.write(()=> {
+      this._renderer.setStyle(this._cover, "r", this.reduceRadius + "%" );
+      this._renderer.setStyle(this._content, "r", this.reduceRadius + "%" );
+    });
+  }
+
+  private _restoreStroke(){
+    this._domCtrl.write(()=> {
+      this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.restoreAnimation + " " + this.restoreDuration + "s");
+      this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt).toString() );
+   });
+  }
+
+  private _increaseStroke(){
+    this._domCtrl.write(()=> {
+      this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.fillAnimation + " " + this.fillDuration + "s");
+      this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.endAt).toString() );
+    });
+  }
 
   onTouchEnd(){  
-    this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._circleWpr, "transition", "stroke-dashoffset " + this.restoreAnimation + " " + this.restoreDuration + "s");
-      this._renderer.setStyle(this._circleWpr, "stroke-dashoffset", this._getRadius(this.startAt).toString() );
-    });
+   this._restoreStroke();
   }
 
   onTouchstart(){
-    this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._circleCcover, "r", this.reduceRadius + "%" );
-      this._renderer.setStyle(this._circleCld, "r", this.reduceRadius + "%" );
-      this._renderer.setStyle(this._circleWpr, "transition", "stroke-dashoffset " + this.fillAnimation + " " + this.fillDuration + "s");
-      this._renderer.setStyle(this._circleWpr, "stroke-dashoffset", this._getRadius(this.endAt).toString() );
-    });
+    this._reduceContent();
+    this._increaseStroke();
   }
 
-  transitionEnd(){
-    this._renderer.setStyle(this._circleCcover, "r", "50%" );
-    this._renderer.setStyle(this._circleCld, "r", "50%" );
-    this.onChargeComplete.emit(this._circleWpr.style.strokeDashoffset == this._getRadius(this.endAt) ? true : false);
+  _strokeTransitionEnd(){
+    this._restoreContent();
+    this.onChargeComplete.emit(this._stroke.style.strokeDashoffset == (360 - this.endAt) ? true : false);
+  }
+
+  _contentTransitionEnd(){
+    this._domCtrl.write(()=> {
+    });
   }
 
 }
