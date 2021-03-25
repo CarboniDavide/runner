@@ -8,6 +8,7 @@ import { ButtonType } from './round_button.type';
   styleUrls: ['./round-buttom.component.scss'],
 })
 export class RoundButtomComponent implements AfterViewInit {
+  readonly DISABLED: boolean = false;
   readonly FILL_DURATION: number = 3;
   readonly RESTORE_DURATION: number = 0.3;
   readonly FILL_ANIMATION: string = "ease-in-out";
@@ -18,9 +19,12 @@ export class RoundButtomComponent implements AfterViewInit {
   readonly TYPE: ButtonType = ButtonType.stop;
   readonly COLOR: any = "Black"
   readonly CONTENT_COLOR: any ="white";
+  readonly DISABLED_COLOR: any = "lightgray";
   readonly SIZE: any = 70;
   readonly ENABLE_CHARGE_ANIMATION: boolean = false;
+  readonly CONTENT_SVG: any = null;
 
+  @Input() disabled: boolean = this.DISABLED;
   @Input() fillDuration: number = this.FILL_DURATION;
   @Input() restoreDuration: number = this.RESTORE_DURATION;
   @Input() fillAnimation: string = this.FILL_ANIMATION;
@@ -31,8 +35,10 @@ export class RoundButtomComponent implements AfterViewInit {
   @Input() type: ButtonType | string = this.TYPE;
   @Input() color: any = this.COLOR;
   @Input() contentColor: any = this.CONTENT_COLOR;
+  @Input() disabledColor: any = this.DISABLED_COLOR;
   @Input() size: any = this.SIZE;
   @Input() enableChargeAnimation: boolean = this.ENABLE_CHARGE_ANIMATION;
+  @Input() contentSVG: any = this.CONTENT_SVG;
   @Output() onChargeComplete: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   private _circleWpr: any;
@@ -68,19 +74,20 @@ export class RoundButtomComponent implements AfterViewInit {
     this.startAt = this.startAt > 360 ? this.START_AT : this.startAt;
     this.restoreDuration = this.restoreDuration <= 0 ? this.RESTORE_DURATION : this.restoreDuration;
 
+    this.enableChargeAnimation = this.enableChargeAnimation && !this.disabled;
     this.enableChargeAnimation = this.enableChargeAnimation && (this.startAt != this.endAt);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.fillDuration > 0);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 50);
+
+    if (this.contentSVG != null){
+      this._element.nativeElement.querySelector("g").innerHTML = this.contentSVG;
+    }
   }
 
-  private _getRadius(value:number) {
-    return 360 - value;
-  }
+  private _getRadius(value:number) { return 360 - value;}
 
   onTouchEnd(){  
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._circleCcover, "r", "50%" );
-      this._renderer.setStyle(this._circleCld, "r", "50%" );
       this._renderer.setStyle(this._circleWpr, "transition", "stroke-dashoffset " + this.restoreAnimation + " " + this.restoreDuration + "s");
       this._renderer.setStyle(this._circleWpr, "stroke-dashoffset", this._getRadius(this.startAt).toString() );
     });
@@ -96,6 +103,8 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   transitionEnd(){
+    this._renderer.setStyle(this._circleCcover, "r", "50%" );
+    this._renderer.setStyle(this._circleCld, "r", "50%" );
     this.onChargeComplete.emit(this._circleWpr.style.strokeDashoffset == this._getRadius(this.endAt) ? true : false);
   }
 
