@@ -30,7 +30,7 @@ export class TrackPage {
     this.geoWatcher.suspend ();
   }
 
-  onFullCircle(event){
-    if (event) { this.stopLocation()}
+  onFullCircle(){
+    //this.stopLocation();
   }
 }
