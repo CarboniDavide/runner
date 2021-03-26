@@ -51,8 +51,8 @@ export class RoundButtomComponent implements AfterViewInit {
   private _cover: any;
   private _content: any;
 
-  private _isContentRestoring = false;
-  private _isStrokeRestoring = false;
+  private _isContentRestoring?: boolean = null;
+  private _isStrokeRestoring?: boolean = null;
 
   constructor(
     private _element: ElementRef,
@@ -67,8 +67,8 @@ export class RoundButtomComponent implements AfterViewInit {
     this._content = this._element.nativeElement.querySelector("#circle-content");
     this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
 
-    this._renderer.listen(this._element.nativeElement, "touchstart", this._onTouchstart.bind(this));
-    this._renderer.listen(this._element.nativeElement, "touchend", this._onTouchEnd.bind(this));
+    this._renderer.listen(this._element.nativeElement, "touchstart", this._startAnimation.bind(this));
+    this._renderer.listen(this._element.nativeElement, "touchend", this._stopAnimation.bind(this));
 
     this._renderer.setStyle(this._stroke, "transition", "none");
     this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
@@ -95,8 +95,8 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _restoreContent(){
-    if (!this._isStrokeRestoring) { return; }
     this._isContentRestoring = true;
+    this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", "50%" );
       this._renderer.setStyle(this._content, "r", "50%" );
@@ -105,6 +105,7 @@ export class RoundButtomComponent implements AfterViewInit {
 
   private _reduceContent(){
     this._isContentRestoring = false;
+    this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", this.reduceRadius + "%" );
       this._renderer.setStyle(this._content, "r", this.reduceRadius + "%" );
@@ -112,8 +113,8 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _restoreStroke(){
-    if (!this._isContentRestoring){ this._restoreContent(); return; }
     this._isStrokeRestoring = true;
+    this._isContentRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.restoreAnimation + " " + this.restoreDuration + "s");
       this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt).toString() );
@@ -121,29 +122,32 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _increaseStroke(){
-    if (this._isContentRestoring) { return; }
     this._isStrokeRestoring = false;
-    this._isContentRestoring = true;
+    this._isContentRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._stroke, "transition", "stroke-dashoffset " + this.fillAnimation + " " + this.fillDuration + "s");
       this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.endAt).toString() );
     });
   }
 
-  private _onTouchEnd(){
+  private _startAnimation(){
+    if (this._isStrokeRestoring == null) { this._reduceContent(); return; }
+    if (this._isStrokeRestoring) { this._increaseStroke(); return; }
+  }
+
+  private _stopAnimation(){ 
+    if (this._isContentRestoring == false) { this._restoreContent(); return; }
     this._restoreStroke();
   }
 
-  private _onTouchstart(){
-    this._reduceContent();
-  }
-
   private _strokeTransitionEnd(){
+    if (this._isStrokeRestoring == false) { return; }
     this._restoreContent();
     this.onChargeComplete.emit(this._stroke.style.strokeDashoffset == (360 - this.endAt) ? true : false);
   }
 
   private _contentTransitionEnd(){
+    if (this._isContentRestoring) { return; }
     this._increaseStroke();
   }
 }
