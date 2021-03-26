@@ -8,6 +8,8 @@ import { ButtonType } from './round_button.type';
   styleUrls: ['./round-buttom.component.scss'],
 })
 export class RoundButtomComponent implements AfterViewInit {
+
+  readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
   readonly END_AT: number = 360;                                      // stop stroke point animation in deg
@@ -29,6 +31,7 @@ export class RoundButtomComponent implements AfterViewInit {
   readonly ENABLE_CHARGE_ANIMATION: boolean = false;                  // anable stroke animation
   readonly CONTENT_SVG: any = null;  
   
+  @Input() reverseAnim: boolean = this.REVERSE_ANIM;
   @Input() disabled: boolean = this.DISABLED;
   @Input() startAt: number = this.START_AT;
   @Input() endAt: number = this.END_AT;
@@ -56,6 +59,7 @@ export class RoundButtomComponent implements AfterViewInit {
   private _content: any;
   private _isContentRestoring?: boolean = null;
   private _isStrokeRestoring?: boolean = null;
+  private _isComplete: boolean = false;
 
   constructor(
     private _element: ElementRef,
@@ -134,18 +138,19 @@ export class RoundButtomComponent implements AfterViewInit {
   }
 
   private _startAnimation(){
+    this._isComplete = false; 
     if (this._isStrokeRestoring == null) { this._reduceContent(); return; }
     if (this._isStrokeRestoring) { this._increaseStroke(); return; }
   }
 
   private _stopAnimation(){ 
     if (this._isContentRestoring == false) { this._restoreContent(); return; }
+    if (this._isContentRestoring) { return; }
     this._restoreStroke();
   }
 
   private _strokeTransitionEnd(){
-    this.onChargeComplete.emit(this._stroke.style.strokeDashoffset == (360 - this.endAt) ? true : false);
-    if (this._isStrokeRestoring == false) { return; }
+    if (!this._isStrokeRestoring) { this.onChargeComplete.emit(this._isComplete=true); return; }
     this._restoreContent();
   }
 
