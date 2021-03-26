@@ -1,5 +1,5 @@
 <svg id="button-svg" xmlns="http://www.w3.org/2000/svg" [style.width]="size" [style.height]="size" viewBox="0 0 512 512">
-  <circle id="circle-stroke" transform="rotate(-90 256 256)" cx="50%" cy="50%" r="46%" [style.stroke]="color" [style.stroke-width]="strokeSize + '%' " fill="none" pathLength="360" stroke-dasharray="360" stroke-dashoffset="360" stroke-linecap="round"/>
+  <circle id="circle-stroke" transform="rotate(-90 256 256)" cx="50%" cy="50%" [style.r]="strokeRadius + '%'" [style.stroke]="strokeColor" [style.stroke-width]="strokeSize + '%' " fill="none" pathLength="360" stroke-dasharray="360" stroke-dashoffset="360" stroke-linecap="round"/>
   <circle id="circle-content" cx="50%" cy="50%" r="50%" [style.fill]="disabled ? disabledColor : color"/>
   
     <rect class="button-player-content" id="button-stop" *ngIf="type=='stop' && contentSVG == null" rx="5%" ry="5%" x="33.3%" y="33.3%" height="33%" width="33%" [style.fill]="contentColor" />
