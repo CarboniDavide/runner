@@ -5,15 +5,17 @@ import { IonicModule } from '@ionic/angular';
 import { TrackPageRoutingModule } from './track-routing.module';
 
 import { TrackPage } from './track.page';
-import { RoundButtomComponent } from '../components/round-buttom/round-buttom.component';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TrackPageRoutingModule
+    TrackPageRoutingModule,
+    ComponentsModule,
+    
   ],
-  declarations: [TrackPage, RoundButtomComponent]
+  declarations: [TrackPage]
 })
 export class TrackPageModule {}
