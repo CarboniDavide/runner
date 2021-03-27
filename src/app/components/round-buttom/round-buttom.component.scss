@@ -1,25 +1,24 @@
-:host #circle-content,
-:host #button-svg{
+:host #ipc-button,
+:host #ipc-stroke,
+:host #ipc-icon{
     position: absolute;
-    border-radius: 50%;
     height: 100%;
     width: 100%;
 }
 
-:host #circle-content {
+:host #ipc-button {
     border-radius: 50%;
 }
 
-:host #ipc-icon-container{
-    position: absolute;
-    height: 33%;
-    width: 33%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+:host #ipc-icon{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+:host #ipc-icon-contentent-svg{
+    height: 32%;
+    width: 32%
 }
 
 .circle-shadow {

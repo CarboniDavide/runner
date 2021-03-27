@@ -9,8 +9,8 @@ import { ButtonType } from './round_button.type';
 })
 export class RoundButtomComponent implements AfterViewInit, OnInit {
 
-  readonly USE_SHADOW: boolean = true;                               // use shadow css style          
-  readonly REVERSE_ANIM: boolean = true;                             // reverese animation after stroke bar is charge is complete    
+  readonly USE_SHADOW: boolean = false;                                // use shadow css style          
+  readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
   readonly END_AT: number = 360;                                      // stop stroke point animation in deg
@@ -30,6 +30,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   readonly STROKE_FILL_ANIMATION: string = "ease-out";                // stroke increase animation type
   readonly STROKE_RESTORE_ANIMATION: string = "ease-in-out";          // stroke decrease animation type
   readonly ENABLE_CHARGE_ANIMATION: boolean = false;                  // anable stroke animation
+  readonly REDUCE_ICON: boolean = false;                              // reduce icon in the same time
   
   @Input() reverseAnim: boolean = this.REVERSE_ANIM;
   @Input() useShadow: boolean = this.USE_SHADOW;
@@ -40,23 +41,29 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   @Input() radiusAnimationDuration: number = this.RADIUS_ANIMATION_DURATION;
   @Input() radiusAnimation: string = this.RADIUS_ANIMATION;
   @Input() type: ButtonType | string = this.TYPE;
+
   @Input() color: any = this.COLOR;
-  @Input() contentColor: any = this.CONTENT_COLOR;
+  @Input() iconColor: any = this.CONTENT_COLOR;
+  @Input() strokeColor: any = this.STROKE_COLOR;
+
   @Input() disabledColor: any = this.DISABLED_COLOR;
   @Input() size: any = this.SIZE;
   @Input() strokeSize: number = this.STROKE_PP_SIZE;
   @Input() strokeRadius: number = this.STROKE_PP_RADIUS;
-  @Input() strokeColor: any = this.STROKE_COLOR;
   @Input() strokeFillDuration: number = this.STROKE_FILL_DURATION;
   @Input() strokeRestoreDuration: number = this.STROKE_RESTORE_DURATION;
   @Input() strokeFillAnimation: string = this.STROKE_FILL_ANIMATION;
   @Input() strokeRestoreAnimation: string = this.STROKE_RESTORE_ANIMATION;
   @Input() enableChargeAnimation: boolean = this.ENABLE_CHARGE_ANIMATION;
-  
+  @Input() reduceIcon: boolean = this.REDUCE_ICON;
+
+
   @Output() onChargeComplete: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   private _stroke: any;
-  private _content: any;
+  private _button: any;
+  private _icon: any;
+
   private _isContentRestoring?: boolean = null;
   private _isStrokeRestoring?: boolean = null;
   private _strokeChargeComplete: boolean = false;
@@ -69,13 +76,14 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
 
 
   ngOnInit(): void {
-    this._content = this._element.nativeElement.querySelector("#circle-content");
-    this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
+    this._button = this._element.nativeElement.querySelector("#ipc-button");
+    this._stroke = this._element.nativeElement.querySelector("#ipc-stroke circle");
+    this._icon = this._element.nativeElement.querySelector("#ipc-icon");
     
     if (this.useShadow) { 
       this.strokeRadius = this.strokeRadius - 1;
-      this._renderer.addClass(this._content, this.useShadow ? "circle-shadow" : "");
-      this._renderer.addClass(this._stroke, this.useShadow ? "stroke-shadow" : "");
+      this._renderer.addClass(this._button, "circle-shadow");
+      this._renderer.addClass(this._stroke, "stroke-shadow");
     }
   }
 
@@ -88,10 +96,11 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._renderer.setStyle(this._stroke, "transition", "none");
     this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
 
-    this._renderer.setStyle(this._content, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._button, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._icon, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
 
     this._renderer.listen(this._stroke, "transitionend", this._strokeTransitionEnd.bind(this));
-    this._renderer.listen(this._content, "transitionend", this._contentTransitionEnd.bind(this));
+    this._renderer.listen(this._button, "transitionend", this._buttonTransitionEnd.bind(this));
   }
 
   private _checkInputValues(): boolean{
@@ -106,19 +115,21 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     return this.enableChargeAnimation;
   }
 
-  private _restoreContent(){
+  private _restoreButton(){
     this._isContentRestoring = true;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._content, "transform", "scale(1)");
+      this._renderer.setStyle(this._button, "transform", "scale(1)");
+      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(1)"); }
     });
   }
 
-  private _reduceContent(){
+  private _reduceButton(){
     this._isContentRestoring = false;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._content, "transform", "scale(" + ((100 - this.reduceRadius) / 100) + ")");
+      this._renderer.setStyle(this._button, "transform", "scale(" + ((100 - this.reduceRadius) / 100) + ")");
+      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ((100 - this.reduceRadius) / 100) + ")"); }
     });
   }
 
@@ -141,15 +152,15 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   }
 
   private _startAnimation(){
-    if (this._isStrokeRestoring == null) { this._reduceContent(); return; }
+    if (this._isStrokeRestoring == null) { this._reduceButton(); return; }
     if (this._isStrokeRestoring) { this._increaseStroke(); return; }
   }
 
   private _stopAnimation(){ 
-    if (this._isContentRestoring == false) { this._restoreContent(); return; }
+    if (this._isContentRestoring == false) { this._restoreButton(); return; }
     if (this._isContentRestoring) { return; }
     if ( (this._strokeChargeComplete) && (!this.reverseAnim) ) {
-      this._restoreContent();
+      this._restoreButton();
       return;
     }
     this._strokeChargeComplete = false;
@@ -159,11 +170,11 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   private _strokeTransitionEnd(){
     this._strokeChargeComplete = this._stroke.style.strokeDashoffset == (360 - this.endAt) ? true : false;
     if (this._strokeChargeComplete) { this.onChargeComplete.emit(true); return; }
-    this._restoreContent();
+    this._restoreButton();
   }
 
-  private _contentTransitionEnd(){
-    if (this._strokeChargeComplete){
+  private _buttonTransitionEnd(){
+    if ((this._strokeChargeComplete) && (!this.reverseAnim)){
       this._renderer.setStyle(this._stroke, "transition", "none");
       this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
       this._strokeChargeComplete = false;
