@@ -14,7 +14,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
   readonly END_AT: number = 360;                                      // stop stroke point animation in deg
-  readonly REDUCE_RADIUS: number = 25;                                // reduced radius for animation in % (1..100)
+  readonly REDUCE_RADIUS: number = 38;                                // reduced radius for animation in % (1..50)
   readonly RADIUS_ANIMATION_DURATION: number = 0.2;                   // reduce circle animationduration in seconds
   readonly RADIUS_ANIMATION: string = "ease-in-out";                  // reduce circle animation type
   readonly TYPE: ButtonType = ButtonType.stop;                        // icon type
@@ -68,6 +68,8 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   private _isStrokeRestoring?: boolean = null;
   private _strokeChargeComplete: boolean = false;
 
+  contentRadius: any = 50;
+
   constructor(
     private _element: ElementRef,
     private _domCtrl: DomController,
@@ -76,14 +78,15 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
 
 
   ngOnInit(): void {
-    this._button = this._element.nativeElement.querySelector("#ipc-button");
+    this._button = this._element.nativeElement.querySelector("#ipc-button circle");
     this._stroke = this._element.nativeElement.querySelector("#ipc-stroke circle");
     this._icon = this._element.nativeElement.querySelector("#ipc-icon");
     
     if (this.useShadow) { 
       this.strokeRadius = this.strokeRadius - 1;
+      this.contentRadius = this.contentRadius -1;
       this._renderer.addClass(this._button, "circle-shadow");
-      this._renderer.addClass(this._stroke, "stroke-shadow");
+      this._renderer.addClass(this._stroke, "circle-shadow");
     }
   }
 
@@ -110,7 +113,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this.enableChargeAnimation = this.enableChargeAnimation && !this.disabled;
     this.enableChargeAnimation = this.enableChargeAnimation && (this.startAt != this.endAt);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.strokeFillDuration > 0);
-    this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 100);
+    this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 50);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.radiusAnimationDuration > 0);
     return this.enableChargeAnimation;
   }
@@ -119,7 +122,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isContentRestoring = true;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._button, "transform", "scale(1)");
+      this._renderer.setStyle(this._button, "r", this.contentRadius + "%" );
       if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(1)"); }
     });
   }
@@ -128,8 +131,8 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isContentRestoring = false;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._button, "transform", "scale(" + ((100 - this.reduceRadius) / 100) + ")");
-      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ((100 - this.reduceRadius) / 100) + ")"); }
+      this._renderer.setStyle(this._button, "r", this.reduceRadius + "%" );
+      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ((this.reduceRadius * 2) / 100) + ")"); }
     });
   }
 
