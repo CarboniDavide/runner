@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { DomController } from '@ionic/angular';
 import { ButtonType } from './round_button.type';
 
@@ -7,7 +7,7 @@ import { ButtonType } from './round_button.type';
   templateUrl: './round-buttom.component.html',
   styleUrls: ['./round-buttom.component.scss'],
 })
-export class RoundButtomComponent implements AfterViewInit {
+export class RoundButtomComponent implements AfterViewInit, OnInit {
 
   readonly USE_SHADOW: boolean = true;                               // use shadow css style          
   readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
@@ -72,19 +72,22 @@ export class RoundButtomComponent implements AfterViewInit {
     private _renderer: Renderer2
   ) { }
 
-  ngAfterViewInit(): void {
 
+  ngOnInit(): void {
     this._cover = this._element.nativeElement.querySelector("#circle-cover");
     this._content = this._element.nativeElement.querySelector("#circle-content");
     this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
-
-    // shadow
-    /*
+    
     this.strokeRadius = this.useShadow ? this.strokeRadius - 1 : this.strokeRadius;
     this.contentRadius = this.useShadow ? this.contentRadius -1 : this.contentRadius;
     this._renderer.addClass(this._content, this.useShadow ? "circle-shadow" : "");
     this._renderer.addClass(this._stroke, this.useShadow ? "circle-shadow" : "");
-    */
+  }
+
+  ngAfterViewInit(): void {
+    this._cover = this._element.nativeElement.querySelector("#circle-cover");
+    this._content = this._element.nativeElement.querySelector("#circle-content");
+    this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
 
     if (!this._checkInputValues()) { return; }
 

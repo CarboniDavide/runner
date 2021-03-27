@@ -36,8 +36,8 @@
       </div>
       
       <div id="navigaor-control-action">
-        <app-round-buttom *ngIf="!isRunning" (click)="traceLocation()" [size]="100" [type]="'play'"  [color]="'rgba(127,195,113,1)'" [contentColor]="'white'" ></app-round-buttom>
-        <app-round-buttom *ngIf="isRunning" [size]="100" [enableChargeAnimation]="true" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [strokeColor]="'rgba(218,105,102,1)'" [contentColor]="'white'" (onChargeComplete)="onFullCircle()" ></app-round-buttom>
+        <app-round-buttom *ngIf="!isRunning" (click)="traceLocation()" [size]="300" [type]="'play'"  [color]="'rgba(127,195,113,1)'" [contentColor]="'white'" ></app-round-buttom>
+        <app-round-buttom *ngIf="isRunning" [size]="300" [enableChargeAnimation]="true" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [strokeColor]="'rgba(218,105,102,1)'" [contentColor]="'white'" (onChargeComplete)="onFullCircle()" ></app-round-buttom>
       </div>
 
     </div>
