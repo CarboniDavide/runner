@@ -9,7 +9,7 @@ import { ButtonType } from './round_button.type';
 })
 export class RoundButtomComponent implements AfterViewInit, OnInit {
 
-  readonly USE_SHADOW: boolean = true;                               // use shadow css style          
+  readonly USE_SHADOW: boolean = false;                               // use shadow css style          
   readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
@@ -78,6 +78,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._content = this._element.nativeElement.querySelector("#circle-content");
     this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
     
+    if (this.useShadow == false) { return; }
     this.strokeRadius = this.useShadow ? this.strokeRadius - 1 : this.strokeRadius;
     this.contentRadius = this.useShadow ? this.contentRadius -1 : this.contentRadius;
     this._renderer.addClass(this._content, this.useShadow ? "circle-shadow" : "");
@@ -85,10 +86,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this._cover = this._element.nativeElement.querySelector("#circle-cover");
-    this._content = this._element.nativeElement.querySelector("#circle-content");
-    this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
-
     if (!this._checkInputValues()) { return; }
 
     this._renderer.listen(this._element.nativeElement, "touchstart", this._startAnimation.bind(this));
@@ -123,7 +120,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", this.contentRadius + "%" );
-      this._renderer.setStyle(this._content, "r", this.contentRadius + "%" );
+      this._renderer.setStyle(this._content, "transform", "scale(1)");
     });
   }
 
@@ -132,7 +129,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
       this._renderer.setStyle(this._cover, "r", this.reduceRadius + "%" );
-      this._renderer.setStyle(this._content, "r", this.reduceRadius + "%" );
+      this._renderer.setStyle(this._content, "transform", "scale(0.8)");
     });
   }
 

@@ -1,3 +1,29 @@
+:host {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:host #circle-content{
+    position: absolute;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+:host #button-svg{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+:host #ipc-icon-container{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 svg:hover #circle-cover{
     fill: rgba(158, 135, 135, 0.2);
 }
