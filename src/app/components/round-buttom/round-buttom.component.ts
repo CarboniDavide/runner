@@ -9,7 +9,7 @@ import { ButtonType } from './round_button.type';
 })
 export class RoundButtomComponent implements AfterViewInit, OnInit {
 
-  readonly USE_SHADOW: boolean = false;                                // use shadow css style          
+  readonly USE_SHADOW: boolean = false;                               // use shadow css style          
   readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
@@ -30,7 +30,7 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   readonly STROKE_FILL_ANIMATION: string = "ease-out";                // stroke increase animation type
   readonly STROKE_RESTORE_ANIMATION: string = "ease-in-out";          // stroke decrease animation type
   readonly ENABLE_CHARGE_ANIMATION: boolean = false;                  // anable stroke animation
-  readonly REDUCE_ICON: boolean = false;                              // reduce icon in the same time
+  readonly REDUCE_ICON: boolean = true;                               // reduce icon in the same time
   
   @Input() reverseAnim: boolean = this.REVERSE_ANIM;
   @Input() useShadow: boolean = this.USE_SHADOW;
