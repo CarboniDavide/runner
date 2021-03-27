@@ -1,9 +1,12 @@
+:host,
+:host #ipc-container{
+    position: relative;
+}
+
 :host #ipc-button,
 :host #ipc-stroke,
 :host #ipc-icon{
     position: absolute;
-    height: 100%;
-    width: 100%;
 }
 
 :host #ipc-icon,

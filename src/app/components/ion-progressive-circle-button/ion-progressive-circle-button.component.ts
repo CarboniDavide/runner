@@ -8,7 +8,7 @@ import { DomController } from '@ionic/angular';
 })
 export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnInit {
 
-  readonly USE_SHADOW: boolean = false;                               // use shadow css style          
+  readonly USE_SHADOW: boolean = true;                               // use shadow css style          
   readonly REVERSE_ANIM: boolean = false;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
@@ -96,10 +96,9 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
     this._renderer.listen(this._element.nativeElement, "touchend", this._stopAnimation.bind(this));
 
     this._renderer.setStyle(this._stroke, "transition", "none");
-    this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
-
-    this._renderer.setStyle(this._button, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._button, "transition", "none");
     this._renderer.setStyle(this._icon, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
+    this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
 
     this._renderer.listen(this._stroke, "transitionend", this._strokeTransitionEnd.bind(this));
     this._renderer.listen(this._button, "transitionend", this._buttonTransitionEnd.bind(this));
@@ -130,6 +129,7 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
     this._isButtonRestoring = false;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
+      this._renderer.setStyle(this._button, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
       this._renderer.setStyle(this._button, "r", (50 - (this.reduceRadius/2)) + "%" );
       if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ( (100 - this.reduceRadius) / 100) + ")"); }
     });
