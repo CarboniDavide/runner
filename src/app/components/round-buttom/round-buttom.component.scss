@@ -1,21 +1,13 @@
-:host {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-:host #circle-content{
+:host #circle-content,
+:host #button-svg{
     position: absolute;
     border-radius: 50%;
     height: 100%;
     width: 100%;
 }
 
-:host #button-svg{
-    position: absolute;
-    height: 100%;
-    width: 100%;
+:host #circle-content {
+    border-radius: 50%;
 }
 
 :host #ipc-icon-container{
@@ -30,11 +22,11 @@
     align-items: center;
 }
 
-svg:hover #circle-cover{
-    fill: rgba(158, 135, 135, 0.2);
+.circle-shadow {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, .7);
 }
 
-.circle-shadow {
+.stroke-shadow{
     -webkit-filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, .7));
     filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, .7));
-  }
+}
