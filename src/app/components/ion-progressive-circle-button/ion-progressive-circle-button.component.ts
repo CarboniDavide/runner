@@ -13,15 +13,15 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  
   readonly END_AT: number = 360;                                      // stop stroke point animation in deg
-  readonly REDUCE_RADIUS: number = 38;                                // reduced radius for animation in % (1..50)
+  readonly REDUCE_RADIUS: number = 24;                                // reduced radius for animation in % (1..100)
   readonly RADIUS_ANIMATION_DURATION: number = 0.2;                   // reduce circle animationduration in seconds
   readonly RADIUS_ANIMATION: string = "ease-in-out";                  // reduce circle animation type
   readonly COLOR: any = "black"                                       // circle color
   readonly ICON_COLOR: any ="white";                                  // icon color
   readonly DISABLED_COLOR: any = "lightgray";                         // circle color disabled      
   readonly SIZE: any = "100%";                                        // size of circle
-  readonly STROKE_PP_SIZE: number = 8;                                // stroke size in % (1..50)
-  readonly STROKE_PP_RADIUS: number = 46;                             // stroke radius in % (1..50)
+  readonly STROKE_PP_SIZE: number = 16;                               // stroke size in % (1..100)
+  readonly STROKE_PP_RADIUS: number = 92;                             // stroke radius in % (1..100)
   readonly STROKE_COLOR: any = this.COLOR;                            // stroke color 
   readonly STROKE_FILL_DURATION: number = 3;                          // stroke increase animation duration in seconds    
   readonly STROKE_RESTORE_DURATION: number = 0.3;                     // stroke decrease animation duration in seconds  
@@ -77,6 +77,10 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
     this._stroke = this._element.nativeElement.querySelector("#ipc-stroke circle");
     this._icon = this._element.nativeElement.querySelector("#ipc-icon");
     
+    // convert stroke unit to 50 instead of 100
+    this.strokeSize = ( this.strokeSize/2);
+    this.strokeRadius = (this.strokeRadius/2);
+
     if (this.useShadow) { 
       this.strokeRadius = this.strokeRadius - 1;
       this.buttonRadius = this.buttonRadius -1;
@@ -108,7 +112,7 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
     this.enableChargeAnimation = this.enableChargeAnimation && !this.disabled;
     this.enableChargeAnimation = this.enableChargeAnimation && (this.startAt != this.endAt);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.strokeFillDuration > 0);
-    this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 50);
+    this.enableChargeAnimation = this.enableChargeAnimation && (this.reduceRadius < 100);
     this.enableChargeAnimation = this.enableChargeAnimation && (this.radiusAnimationDuration > 0);
     return this.enableChargeAnimation;
   }
@@ -126,8 +130,8 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
     this._isButtonRestoring = false;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._button, "r", this.reduceRadius + "%" );
-      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ((this.reduceRadius * 2) / 100) + ")"); }
+      this._renderer.setStyle(this._button, "r", (50 - (this.reduceRadius/2)) + "%" );
+      if (this.reduceIcon) { this._renderer.setStyle(this._icon, "transform", "scale(" + ( (100 - this.reduceRadius) / 100) + ")"); }
     });
   }
 
