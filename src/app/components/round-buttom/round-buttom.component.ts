@@ -57,7 +57,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
   @Output() onChargeComplete: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   private _stroke: any;
-  private _cover: any;
   private _content: any;
 
   private _isContentRestoring?: boolean = null;
@@ -74,7 +73,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
 
 
   ngOnInit(): void {
-    this._cover = this._element.nativeElement.querySelector("#circle-cover");
     this._content = this._element.nativeElement.querySelector("#circle-content");
     this._stroke = this._element.nativeElement.querySelector("#circle-stroke");
     
@@ -95,7 +93,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._renderer.setStyle(this._stroke, "stroke-dashoffset", (360 - this.startAt));
 
     this._renderer.setStyle(this._content, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
-    this._renderer.setStyle(this._cover, "transition", this.radiusAnimation + " " + this.radiusAnimationDuration + "s");
 
     this._renderer.listen(this._stroke, "transitionend", this._strokeTransitionEnd.bind(this));
     this._renderer.listen(this._content, "transitionend", this._contentTransitionEnd.bind(this));
@@ -119,7 +116,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isContentRestoring = true;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._cover, "r", this.contentRadius + "%" );
       this._renderer.setStyle(this._content, "transform", "scale(1)");
     });
   }
@@ -128,7 +124,6 @@ export class RoundButtomComponent implements AfterViewInit, OnInit {
     this._isContentRestoring = false;
     this._isStrokeRestoring = null;
     this._domCtrl.write(()=> {
-      this._renderer.setStyle(this._cover, "r", this.reduceRadius + "%" );
       this._renderer.setStyle(this._content, "transform", "scale(0.8)");
     });
   }
