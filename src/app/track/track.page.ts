@@ -31,6 +31,6 @@ export class TrackPage {
   }
 
   onFullCircle(){
-    //this.stopLocation();
+    this.stopLocation();
   }
 }
