@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Exchanger } from '../providers/exchanger';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
 import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 

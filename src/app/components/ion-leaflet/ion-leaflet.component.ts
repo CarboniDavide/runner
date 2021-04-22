@@ -1,14 +1,15 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import * as Leaflet from 'leaflet';
-import { Exchanger } from '../providers/exchanger';
-import { GeoStorage } from '../providers/geoLocator/geoStorage';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import * as Leaflet from 'leaflet'; 
+import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  selector: 'app-ion-leaflet',
+  templateUrl: './ion-leaflet.component.html',
+  styleUrls: ['./ion-leaflet.component.scss'],
 })
-export class MapPage implements OnInit, OnDestroy {
+export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
+
+  @Input() track?: GeoTrack = null;
 
   lastPolyline: any = null;
   map: Leaflet.Map;
@@ -29,13 +30,20 @@ export class MapPage implements OnInit, OnDestroy {
     minZoom: 3
   }
 
-  constructor(public geoStorage: GeoStorage, private exchanger: Exchanger) { }
+  constructor() { }
   
+  ngOnChanges(changes: SimpleChanges): void {}
+
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    // Remove map when we have multiple map object
+    this.map.remove();
+  }
+
   ionViewDidEnter(): void {
     this.leafletMap();
   }
-
-  ngOnInit() {}
 
   leafletMap() {
     try{
@@ -47,23 +55,16 @@ export class MapPage implements OnInit, OnDestroy {
     // let p = this.geolocator.lastPosition;
     // Leaflet.circle(p.latitude, p.longitude.toString()).addTo(this.map);
 
-    if (this.exchanger.selecteTrack == null) { return; }
+    if (this.track == null) { return; }
 
     let latlngs: any = [];
   
-    this.exchanger.selecteTrack.points.forEach(p => {
+    this.track.points.forEach(p => {
       latlngs.push([p.latitude, p.longitude]);
     });
 
 
     if (this.lastPolyline != null) { this.lastPolyline.remove(this.map);}
     this.lastPolyline = Leaflet.polyline(latlngs, {color: 'red'}).addTo(this.map);
-
   }
-
-  /** Remove map when we have multiple map object */
-  ngOnDestroy() {
-    this.map.remove();
-  }
-
 }

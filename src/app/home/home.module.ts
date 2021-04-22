@@ -6,18 +6,19 @@ import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
-import { GeoLocator } from '../providers/geoLocator/geoLocator';
 import { Exchanger } from '../providers/exchanger';
 import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    ComponentsModule
   ],
   declarations: [HomePage],
-  providers: [ GeoStorage, GeoLocator, GeoWatcher, Exchanger ]
+  providers: [ GeoStorage, GeoWatcher, Exchanger ]
 })
 export class HomePageModule {}

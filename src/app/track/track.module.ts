@@ -14,7 +14,6 @@ import { ComponentsModule } from '../components/components.module';
     IonicModule,
     TrackPageRoutingModule,
     ComponentsModule,
-    
   ],
   declarations: [TrackPage]
 })

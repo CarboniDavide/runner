@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 import { GeoLocator } from "./geoLocator";
 import { GeoPoint } from "./geoPoint";
 import { GeoTrack } from "./geoTrack";
-import { GeoUtils } from "./geoUtils";
+
 
 export enum GeoWatcherSate {
     Ready = "Ready",
@@ -32,8 +32,11 @@ export class GeoWatcher{
     track: GeoTrack = null;
     timer: Timer = new Timer();
     isRunning: Boolean = false;
+    geolocator: GeoLocator;
 
-    constructor(private geolocator: GeoLocator){}
+    constructor(){
+        this.geolocator = new GeoLocator();
+    }
 
     private _init(){
         this.track = new GeoTrack();
