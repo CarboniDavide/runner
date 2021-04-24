@@ -1,69 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import * as Leaflet from 'leaflet';
+import { Component } from '@angular/core';
 import { Exchanger } from '../providers/exchanger';
-import { GeoStorage } from '../providers/geoLocator/geoStorage';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
 })
-export class MapPage implements OnInit, OnDestroy {
+export class MapPage {
 
-  lastPolyline: any = null;
-  map: Leaflet.Map;
-  lat: any = "46.829082";
-  lng: any = "6.541396";
-  zoomLevel: any = 18;
-  style: any = {
-    mapNick: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    sat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    cycle: 'https://dev.{s}.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
-    topo: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    stamen: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png'
-  }
-  options: any = {
-    attributionControl: false,
-    zoomControl: false,
-    draggable: true,
-    minZoom: 3
-  }
-
-  constructor(public geoStorage: GeoStorage, private exchanger: Exchanger) { }
-  
-  ionViewDidEnter(): void {
-    this.leafletMap();
-  }
-
-  ngOnInit() {}
-
-  leafletMap() {
-    try{
-      this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
-      Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
-      Leaflet.control.scale().addTo(this.map);
-    }catch{ }
-
-    // let p = this.geolocator.lastPosition;
-    // Leaflet.circle(p.latitude, p.longitude.toString()).addTo(this.map);
-
-    if (this.exchanger.selecteTrack == null) { return; }
-
-    let latlngs: any = [];
-  
-    this.exchanger.selecteTrack.points.forEach(p => {
-      latlngs.push([p.latitude, p.longitude]);
-    });
-
-
-    if (this.lastPolyline != null) { this.lastPolyline.remove(this.map);}
-    this.lastPolyline = Leaflet.polyline(latlngs, {color: 'red'}).addTo(this.map);
-
-  }
-
-  /** Remove map when we have multiple map object */
-  ngOnDestroy() {
-    this.map.remove();
-  }
+  constructor(public exchanger: Exchanger) { }
 
 }

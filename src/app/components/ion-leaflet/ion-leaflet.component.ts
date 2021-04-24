@@ -23,6 +23,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     topo: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
     stamen: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png'
   }
+
   options: any = {
     attributionControl: false,
     zoomControl: false,
@@ -30,19 +31,28 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     minZoom: 3
   }
 
+  // options: any = {
+  //   attributionControl: false,
+  //   center: [ this.lat, this.lng ],
+  //   zoomControl: false,
+  //   draggable: true,
+  //   zoom: 18,
+  //   minZoom: 3
+  // }
+
   constructor() { }
   
   ngOnChanges(changes: SimpleChanges): void {}
 
-  ngOnInit() {}
-
-  ngOnDestroy() {
-    // Remove map when we have multiple map object
-    this.map.remove();
+  ngOnInit() {
+    this.leafletMap();
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 0);
   }
 
-  ionViewDidEnter(): void {
-    this.leafletMap();
+  ngOnDestroy() {
+    this.map.remove();
   }
 
   leafletMap() {
