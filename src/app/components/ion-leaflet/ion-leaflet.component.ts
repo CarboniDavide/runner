@@ -42,13 +42,13 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor() { }
   
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.track) { this.addTrack(); }
+  }
 
   ngOnInit() {
     this.leafletMap();
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 0);
+    setTimeout(() => { this.map.invalidateSize(); }, 0);
   }
 
   ngOnDestroy() {
@@ -64,11 +64,13 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
 
     // let p = this.geolocator.lastPosition;
     // Leaflet.circle(p.latitude, p.longitude.toString()).addTo(this.map);
+  }
 
-    if (this.track == null) { return; }
+  addTrack() {
+    if (this.track == null) { return }
 
     let latlngs: any = [];
-  
+
     this.track.points.forEach(p => {
       latlngs.push([p.latitude, p.longitude]);
     });
