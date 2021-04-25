@@ -46,4 +46,8 @@ export class GeoTrack {
     private _deg2rad(deg) {
         return deg * (Math.PI/180)
     }
+
+    public getCenter(){
+        
+    }
 }
