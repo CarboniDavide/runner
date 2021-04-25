@@ -56,7 +56,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   constructor() { }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.track) { setTimeout(() => { this.addTrackToMap(); }, 0); }
+    if (changes.track) { this.addTrackToMap(); }
   }
 
   ngOnInit() {
@@ -69,11 +69,13 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   leafletMap() {
-    Leaflet.Marker.prototype.options.icon = this.iconDefault;   // load personale marker
-    this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
-    Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
-    Leaflet.control.scale().addTo(this.map);
-    if (this.enableMarker) { this.addMarkerToMap() };
+    try {
+      Leaflet.Marker.prototype.options.icon = this.iconDefault;   // load personale marker
+      this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
+      Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
+      Leaflet.control.scale().addTo(this.map);
+      if (this.enableMarker) { this.addMarkerToMap() };
+    } catch {}
   }
 
   addTrackToMap() {
