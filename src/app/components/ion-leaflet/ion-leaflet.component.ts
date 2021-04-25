@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import * as Leaflet from 'leaflet'; 
 import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
 
@@ -23,6 +23,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     tooltipAnchor: [16, -28],
   });
 
+  addTrack: Boolean = false;
   marker: any = null;
   polyline: any = null;
   map: Leaflet.Map;
@@ -44,29 +45,15 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     minZoom: 3
   }
 
-  // options: any = {
-  //   attributionControl: false,
-  //   center: [ this.lat, this.lng ],
-  //   zoomControl: false,
-  //   draggable: true,
-  //   zoom: 18,
-  //   minZoom: 3
-  // }
-
   constructor() { }
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.track) { this.addTrackToMap(); }
   }
 
-  ngOnInit() {
-    this.leafletMap();
-    setTimeout(() => { this.map.invalidateSize(); }, 0);
-  }
+  ngOnInit() { this.leafletMap(); }
 
-  ngOnDestroy() {
-    this.map.remove();
-  }
+  ngOnDestroy() { this.map.remove(); }
 
   leafletMap() {
     try {
@@ -74,16 +61,22 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
       this.map = Leaflet.map('mapId', this.options).setView([this.lat, this.lng], this.zoomLevel);
       Leaflet.tileLayer(this.style["mapNick"]).addTo(this.map);
       Leaflet.control.scale().addTo(this.map);
-      if (this.enableMarker) { this.addMarkerToMap() };
+      if (this.enableMarker) { this.addMarkerToMap() };       // add marker if required  
+      setTimeout(() => { this.map.invalidateSize(); }, 0);    // wait while map is fully initilized
     } catch {}
   }
 
   addTrackToMap() {
     if (this.track == null) { return }
+    if (this.map == null) { 
+      this.leafletMap();                                                        // initialise map before
+      setTimeout(() => { this.addTrackToMap(); }, 0);                           // add track after map is fully initialized
+      return;
+    }                        
     let line = this.track.points.map( p => ([p.latitude, p.longitude]) )        // prepare a new line using lat and long from ponits
     this.removeTrackFromMap();                                                  // remove old polyline before
     this.removeMarkerToMap();                                                   // remove old marker from map
-    this.polyline = Leaflet.polyline(line, {color: 'red'}).addTo(this.map);     // add new polyline
+    this.polyline = Leaflet.polyline(line, {color: 'blue'}).addTo(this.map);    // add new polyline
     this.map.fitBounds(this.polyline.getBounds());                              // zoom the map to the polyline
   }
 
