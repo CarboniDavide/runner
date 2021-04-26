@@ -3,27 +3,6 @@ import * as Leaflet from 'leaflet';
 import { GeoPoint } from 'src/app/providers/geoLocator/geoPoint';
 import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
 
-
-function mapCheck() {
-  return function ( target: Object, key: string | symbol, descriptor: PropertyDescriptor) {
-    const original = descriptor.value;
-    descriptor.value = function() {
-      if (this._map != null) {
-        const result = original.apply(this);
-        console.log(result);
-        return result;
-      } else {
-        return ()=> {
-          this.leaflet();
-          setTimeout(() => { original }, 0);
-        }
-      }
-    };
-
-    return descriptor;
-  };
-}
-
 @Component({
   selector: 'app-ion-leaflet',
   templateUrl: './ion-leaflet.component.html',
