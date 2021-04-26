@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { MapPageRoutingModule } from './map-routing.module';
 import { MapPage } from './map.page';
 import { ComponentsModule } from '../components/components.module';
+import { GeoLocator } from '../providers/geoLocator/geoLocator';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { ComponentsModule } from '../components/components.module';
     MapPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [MapPage]
+  declarations: [MapPage],
+  providers: [ GeoLocator ]
 })
 export class MapPageModule {}
