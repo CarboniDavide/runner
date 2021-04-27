@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Time } from 'jts-timer';
 import { Exchanger } from 'src/app/providers/exchanger';
 import { ActivityWatcher } from 'src/app/providers/geoLocator/activityWatcher';
+import { GeoStorage } from 'src/app/providers/geoLocator/geoStorage';
 import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
 
 @Component({
@@ -12,6 +13,7 @@ import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
 })
 export class ActivityCardComponent implements OnInit, AfterViewInit {
   @Input() track: GeoTrack;
+  @Input() index: number;
 
   isOpened: boolean = false;
 
@@ -20,7 +22,8 @@ export class ActivityCardComponent implements OnInit, AfterViewInit {
     private route: Router, 
     public activityWatcher: ActivityWatcher,
     private _renderer: Renderer2,
-    private _element: ElementRef
+    private _element: ElementRef,
+    private _geoStorage: GeoStorage
   ) { }
 
   ngAfterViewInit(): void {
@@ -39,6 +42,10 @@ export class ActivityCardComponent implements OnInit, AfterViewInit {
   showTrack(){
     this.exchanger.selecteTrack = this.track;
     this.route.navigate(['/home/map']);
+  }
+
+  deleteTrack(){
+    this._geoStorage.removeTrack(this.index);
   }
 
   getTime(time:number): any{

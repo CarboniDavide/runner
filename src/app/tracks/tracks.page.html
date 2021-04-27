@@ -16,7 +16,7 @@
     </ion-text>
   </div>
 
-  <app-activity-card *ngFor="let track of tracks" [track]="track"></app-activity-card>
+  <app-activity-card *ngFor="let track of tracks, let i = index" [track]="track" [index]="i"></app-activity-card>
 
 </ion-content>
 

@@ -33,6 +33,11 @@ export class GeoStorage {
       this.store();
     }
 
+    public removeTrack(index){
+      this.tracks.splice(index, 1);
+      this.store();
+    }
+
     public store(){
       this.storage.set('tracks', this.tracks);
     }

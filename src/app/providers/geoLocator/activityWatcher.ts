@@ -17,7 +17,7 @@ export enum ActivityWatcherSate {
 @Injectable()
 export class ActivityWatcher{
 
-    readonly DEFAULAT_MAX_ACCURACY = 30;
+    readonly DEFAULAT_MAX_ACCURACY = 5;
 
     currentPoint: GeoPoint;
     oldPoint: GeoPoint;

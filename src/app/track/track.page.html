@@ -31,9 +31,9 @@
 
   <div id="map-container">
     <app-ion-leaflet
-      [center]="center"
+      [center]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : center"
       [zoom]="zoom"
-      [marker]="marker"
+      [marker]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : marker"
       [height]="getHight()">
     </app-ion-leaflet>
   </div>
