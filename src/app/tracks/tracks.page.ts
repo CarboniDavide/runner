@@ -1,8 +1,8 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
 import { GeoTrack } from '../providers/geoLocator/geoTrack';
-import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 import { Exchanger } from '../providers/exchanger';
+import { ActivityWatcher } from '../providers/geoLocator/activityWatcher';
 
 @Component({
   selector: 'app-tracks',
@@ -15,7 +15,7 @@ export class TracksPage{
 
   constructor(
     public geoStorage: GeoStorage, 
-    public geoWatcher: GeoWatcher, 
+    public activityWatcher: ActivityWatcher, 
     public exchanger: Exchanger 
   ){
     this.tracks = this.geoStorage.tracks;

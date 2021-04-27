@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { ActivityWatcher } from '../providers/geoLocator/activityWatcher';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
-import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 
 @Component({
   selector: 'app-about',
@@ -11,7 +11,7 @@ import { GeoWatcher } from '../providers/geoLocator/geoWatcher';
 export class AboutPage implements OnInit {
 
   constructor(
-    public geoWatcher: GeoWatcher, 
+    public activityWatcher: ActivityWatcher, 
     private geoStorage: GeoStorage, 
     private alertController: AlertController
   ) { }
@@ -19,10 +19,10 @@ export class AboutPage implements OnInit {
   ngOnInit() {}
 
   getAccuracy(event){
-    this.geoWatcher.maxAccuracy = event.detail.value;
-    if (this.geoWatcher.isRunning) { 
-      this.geoWatcher.stop(); 
-      this.geoWatcher.start();
+    this.activityWatcher.maxAccuracy = event.detail.value;
+    if (this.activityWatcher.isRunning) { 
+      this.activityWatcher.clear();
+      this.activityWatcher.start();
     }
   }
 

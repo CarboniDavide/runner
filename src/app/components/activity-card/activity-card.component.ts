@@ -2,8 +2,8 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2 } from '
 import { Router } from '@angular/router';
 import { Time } from 'jts-timer';
 import { Exchanger } from 'src/app/providers/exchanger';
+import { ActivityWatcher } from 'src/app/providers/geoLocator/activityWatcher';
 import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
-import { GeoWatcher } from 'src/app/providers/geoLocator/geoWatcher';
 
 @Component({
   selector: 'app-activity-card',
@@ -18,7 +18,7 @@ export class ActivityCardComponent implements OnInit, AfterViewInit {
   constructor(
     private exchanger: Exchanger, 
     private route: Router, 
-    public geoWatcher: GeoWatcher,
+    public activityWatcher: ActivityWatcher,
     private _renderer: Renderer2,
     private _element: ElementRef
   ) { }

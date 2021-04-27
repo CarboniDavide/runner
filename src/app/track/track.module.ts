@@ -6,6 +6,7 @@ import { TrackPageRoutingModule } from './track-routing.module';
 
 import { TrackPage } from './track.page';
 import { ComponentsModule } from '../components/components.module';
+import { GeoLocator } from '../providers/geoLocator/geoLocator';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { ComponentsModule } from '../components/components.module';
     TrackPageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [TrackPage]
+  declarations: [TrackPage],
+  providers: [ GeoLocator]
 })
 export class TrackPageModule {}

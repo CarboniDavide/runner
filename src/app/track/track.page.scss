@@ -1,34 +1,53 @@
 #activity-navigator{
     width: 100%;
-    height: 400px;
     position: relative;
 }
 
 .activity-navigator-element{
     width: 100%;
-    height: 200px;
+    height: 100px;
 }
 
-.activity-navigator-element .inner{
+.bottom-line{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom-width: 1px !important;
+    border-bottom-style: solid !important;
+    border-bottom-color: lightblue !important;
+}
+
+.activity-navigator-element {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 15%;
-    background-color: rgba(165, 164, 164, 0.1);
     height: 100%;
     width: 100%;
 }
 
-.activity-navigator-element > .inner ion-text{
+.medium > ion-text:first-child{
     font-size: 23px !important;
+}
+.medium > ion-text:last-child{
+    padding: 3px;
+    font-size: 13px !important;
+}
+
+.large > ion-text:first-child{
+    font-size: 43px !important;
+}
+
+.large > ion-text:last-child{
+    padding: 3px;
+    font-size: 13px !important;
 }
 
 #navigaor-control-action{
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 90%;
     transform: translate(-50%,-50%);
+    z-index: 999;
 }
 
 .navigator-icon-size{
@@ -40,4 +59,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+#gps-icon{
+    font-size: 28px;
 }

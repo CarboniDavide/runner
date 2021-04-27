@@ -1,7 +1,7 @@
-import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import * as Leaflet from 'leaflet'; 
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { GeoPoint } from 'src/app/providers/geoLocator/geoPoint';
 import { GeoTrack } from 'src/app/providers/geoLocator/geoTrack';
+import * as Leaflet from 'leaflet'; 
 
 @Component({
   selector: 'app-ion-leaflet',
@@ -14,6 +14,9 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   @Input() marker?: GeoPoint = null;
   @Input() center?: GeoPoint = new GeoPoint(0,0);
   @Input() zoom?: number = 3;
+  @Input() width?: string = '100%';
+  @Input() height?: string = '100%';
+
 
   // define personale marker
   iconDefault = Leaflet.icon({
@@ -46,13 +49,14 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     zoom: this.zoom
   }
 
-  constructor() { }
+  constructor(private _el: ElementRef) { }
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.track) { this.addTrackToMap(); }
     if (changes.marker) { this.addMarkerToMap(); }
     if (changes.center) { this.setMapCenter(); }
     if (changes.zoom) { this.setZoom(); }
+    setTimeout(() => { this._map.invalidateSize(); }, 0);
   }
 
   ngOnInit() { this.leafletMap(); }
@@ -62,7 +66,8 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   leafletMap() {
     try {
       Leaflet.Marker.prototype.options.icon = this.iconDefault;                    // load personale marker
-      this._map = Leaflet.map('mapId', this.options).setView([0, 0]);
+      this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.options).setView([this.center.latitude, this.center.longitude]);
+      this._map.on('resize', this.setMapCenter.bind(this));
       Leaflet.tileLayer(this.style["mapNick"]).addTo(this._map);
       Leaflet.control.scale().addTo(this._map);
       setTimeout(() => { this._map.invalidateSize(); }, 0);                         // wait while map is fully initilized
@@ -88,6 +93,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addMarkerToMap(){
+    if (this.marker == null) { return }
     if (this._map == null) {  
       this.leafletMap();                                                         // initialise map before
       setTimeout(() => { this.addMarkerToMap(); }, 0);                           // add track after map is fully initialized
@@ -103,22 +109,22 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   setMapCenter(){
+    if (this.center == null ){ return }
     if (this._map == null) { 
       this.leafletMap();                                                        // initialise map before
       setTimeout(() => { this.setMapCenter(); }, 0);                            // add track after map is fully initialized
       return;
     }    
-
     this._map.setView([this.center.latitude, this.center.longitude]);
   }
 
   setZoom(){
+    if (this.center == null){ return }
     if (this._map == null) { 
       this.leafletMap();                                                        // initialise map before
       setTimeout(() => { this.setZoom(); }, 0);                                 // add track after map is fully initialized
       return;
     }   
-
     this._map.setView([this.center.latitude, this.center.longitude], this.zoom);
   }
 

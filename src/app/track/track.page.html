@@ -1,45 +1,47 @@
 <ion-content>
-  <div class="ion-padding middle-all">
 
+  <div class="ion-padding middle-all" id="navigation">
     <div id="activity-navigator">
-      
       <div id="activity-navigator-element-container">
         <ion-row>
-          <ion-col class="activity-navigator-element">
-            <div class="inner">
-              <ion-icon name="analytics-outline" class="navigator-icon-size"></ion-icon><br>
-              <ion-text color="primary">{{geoWatcher.totalDistance.toFixed(3)}}</ion-text>
-            </div>
-          </ion-col>
-          <ion-col class="activity-navigator-element">
-            <div class="inner">
-              <ion-icon name="flash-outline" class="navigator-icon-size"></ion-icon><br>
-              <ion-text color="primary">{{geoWatcher.currentPoint == null ? 0 :  (geoWatcher.currentPoint.getSpeedToKm()) }}</ion-text>
-            </div>
+          <ion-col class="activity-navigator-element large">
+            <ion-text> {{activityWatcher.timer.time.days}}.{{activityWatcher.timer.time.hours < 10 ? "0" + activityWatcher.timer.time.hours : activityWatcher.timer.time.hours}}.{{activityWatcher.timer.time.minutes < 10 ? "0" + activityWatcher.timer.time.minutes : activityWatcher.timer.time.minutes}}.{{activityWatcher.timer.time.seconds < 10 ? "0" + activityWatcher.timer.time.seconds : activityWatcher.timer.time.seconds}} </ion-text>
+            <ion-text color="primary">DURATION</ion-text>
           </ion-col>
         </ion-row>
+        <ion-row  class="bottom-line"></ion-row>
         <ion-row>
-          <ion-col class="activity-navigator-element">
-            <div class="inner">
-              <ion-icon name="chatbox-outline" class="navigator-icon-size"></ion-icon><br>
-              <ion-text color="primary">{{ geoWatcher.state }}</ion-text>
-            </div>
+          <ion-col class="activity-navigator-element medium">
+            <ion-text >{{activityWatcher.currentPoint == null ? 0 :  (activityWatcher.currentPoint.getSpeedToKm()) }}</ion-text>
+            <ion-text color="primary">SPEED</ion-text>
           </ion-col>
-          <ion-col class="activity-navigator-element">
-            <div class="inner">
-              <ion-icon name="timer-outline" class="navigator-icon-size"></ion-icon><br>
-              <ion-text color="primary"> 
-                {{geoWatcher.timer.time.days}}.{{geoWatcher.timer.time.hours < 10 ? "0" + geoWatcher.timer.time.hours : geoWatcher.timer.time.hours}}.{{geoWatcher.timer.time.minutes < 10 ? "0" + geoWatcher.timer.time.minutes : geoWatcher.timer.time.minutes}}.{{geoWatcher.timer.time.seconds < 10 ? "0" + geoWatcher.timer.time.seconds : geoWatcher.timer.time.seconds}}</ion-text>
-            </div>
+          <ion-col class="activity-navigator-element medium">
+            <ion-icon *ngIf="activityWatcher.isGpsConnected"  id="gps-icon" name="cellular" [style.color]= "'green'"></ion-icon>
+            <ion-icon *ngIf="!activityWatcher.isGpsConnected" id="gps-icon" name="cellular-outline" [style.color]= "'red'"></ion-icon>
+            <ion-text color="primary">GPS</ion-text>
+          </ion-col>
+          <ion-col class="activity-navigator-element medium">
+            <ion-text>{{activityWatcher.totalDistance.toFixed(3)}}</ion-text>
+            <ion-text color="primary">DISTANCE</ion-text>
           </ion-col>
         </ion-row>
       </div>
-      
-      <div id="navigaor-control-action">
-        <app-round-buttom *ngIf="!isRunning" (click)="traceLocation()" [size]="100" [type]="'play'"  [color]="'rgba(127,195,113,1)'" [iconColor]="'white'" ></app-round-buttom>
-        <app-round-buttom *ngIf="isRunning" [size]="100" [enableChargeAnimation]="true" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [strokeColor]="'rgba(218,105,102,1)'" [iconColor]="'white'" (onChargeComplete)="onFullCircle()" ></app-round-buttom>
-      </div>
-
     </div>
   </div>
+
+  <div id="map-container">
+    <app-ion-leaflet
+      [center]="center"
+      [zoom]="zoom"
+      [marker]="marker"
+      [height]="getHight()">
+    </app-ion-leaflet>
+  </div>
+
+
+  <div id="navigaor-control-action">
+    <app-round-buttom *ngIf="!isRunning" (click)="traceLocation()" [size]="70" [type]="'play'"  [color]="'rgba(127,195,113,1)'" [iconColor]="'white'" ></app-round-buttom>
+    <app-round-buttom *ngIf="isRunning" [size]="70" [enableChargeAnimation]="true" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [strokeColor]="'rgba(218,105,102,1)'" [iconColor]="'white'" (onChargeComplete)="onFullCircle()" ></app-round-buttom>
+  </div>
+
 </ion-content>
