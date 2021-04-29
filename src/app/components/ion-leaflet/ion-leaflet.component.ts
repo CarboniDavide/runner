@@ -85,7 +85,9 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     this.removeTrackFromMap();                                                      // remove old polyline before
     this.removeMarkerToMap();                                                       // remove old marker from map
     this._polyline = Leaflet.polyline(line, {color: 'blue'}).addTo(this._map);      // add new polyline
-    this._map.fitBounds(this._polyline.getBounds());                                // zoom the map to the polyline
+    if (this.track.points.length != 0){                                             // use a valid track (with almost one point)
+      this._map.fitBounds(this._polyline.getBounds());                              // zoom the map to the polyline
+    }
   }
 
   removeTrackFromMap() {

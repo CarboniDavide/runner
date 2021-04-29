@@ -1,0 +1,4 @@
+<div class="slideunlock-slider" [class.success]="index == max" [style.width]="width" [style.height]="height">
+    <span class="slideunlock-label"></span>
+    <span class="slideunlock-lable-tip" [style.opacity]="(100 - (index/(max/100))) + '%'"> {{ index == max ? successLabelTip : labelTip }} </span>
+</div>

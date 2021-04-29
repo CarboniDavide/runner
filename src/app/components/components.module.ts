@@ -4,21 +4,26 @@ import { IonProgressiveCircleButtonComponent } from './ion-progressive-circle-bu
 import { RoundButtomComponent } from './round-buttom/round-buttom.component';
 import { IonLeafletComponent } from './ion-leaflet/ion-leaflet.component';
 import { ActivityCardComponent } from './activity-card/activity-card.component';
+import { IonicModule } from '@ionic/angular';
+import { IonUnlockButtonComponent } from './ion-unlock-button/ion-unlock-button.component';
 
 @NgModule({
   declarations: [ 
     IonProgressiveCircleButtonComponent, 
     RoundButtomComponent,
     ActivityCardComponent,
-    IonLeafletComponent
+    IonLeafletComponent,
+    IonUnlockButtonComponent
   ],
   exports: [ 
     RoundButtomComponent, 
     ActivityCardComponent,
-    IonLeafletComponent
+    IonLeafletComponent,
+    IonUnlockButtonComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    IonicModule
   ]
 })
 export class ComponentsModule { }
