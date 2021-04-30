@@ -23,7 +23,7 @@ export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnIni
   readonly STROKE_PP_SIZE: number = 16;                               // stroke size in % (1..100)
   readonly STROKE_PP_RADIUS: number = 92;                             // stroke radius in % (1..100)
   readonly STROKE_COLOR: any = this.COLOR;                            // stroke color 
-  readonly STROKE_FILL_DURATION: number = 3;                          // stroke increase animation duration in seconds    
+  readonly STROKE_FILL_DURATION: number = 2;                          // stroke increase animation duration in seconds    
   readonly STROKE_RESTORE_DURATION: number = 0.3;                     // stroke decrease animation duration in seconds  
   readonly STROKE_FILL_ANIMATION: string = "ease-out";                // stroke increase animation type
   readonly STROKE_RESTORE_ANIMATION: string = "ease-out";          // stroke decrease animation type
