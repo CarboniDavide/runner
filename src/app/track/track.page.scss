@@ -64,3 +64,13 @@
 #gps-icon{
     font-size: 28px;
 }
+
+#navigaor-control-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#navigaor-control-inner > app-round-buttom {
+    margin: 5px;
+}

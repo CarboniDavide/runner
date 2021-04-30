@@ -1,4 +1,7 @@
-<div class="slideunlock-slider" [class.success]="index == max" [style.width]="width" [style.height]="height">
-    <span class="slideunlock-label"></span>
-    <span class="slideunlock-lable-tip" [style.opacity]="(100 - (index/(max/100))) + '%'"> {{ index == max ? successLabelTip : labelTip }} </span>
+<div id="slideunlock-slider" [class.success]="potIndex == max" [style.width]="width" [style.height]="height" [style.background]="sliderColor">
+    <div id="slideunlock-label" [style.transform]="'translateX('+ potIndex + 'px)'" [style.transition]="swipestart ? 'none': transition" [style.background]="potColor"></div>
+    <div id="slideunlock-label-tip"> 
+        <div *ngIf="potIndex != max" [style.opacity]="(100 - (potIndex/(max/100))) + '%'">{{ labelTip }}</div> 
+        <div *ngIf="potIndex == max">{{ successLabelTip }}</div>
+    </div>
 </div>

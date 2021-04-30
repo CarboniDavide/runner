@@ -17,7 +17,6 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   @Input() width?: string = '100%';
   @Input() height?: string = '100%';
 
-
   // define personale marker
   iconDefault = Leaflet.icon({
     iconUrl: 'assets/map/marker-icon.png',
@@ -69,7 +68,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
       this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.options).setView([this.center.latitude, this.center.longitude]);
       this._map.on('resize', this.setMapCenter.bind(this));
       Leaflet.tileLayer(this.style["mapNick"]).addTo(this._map);
-      Leaflet.control.scale().addTo(this._map);
+      //Leaflet.control.scale().addTo(this._map);
       setTimeout(() => { this._map.invalidateSize(); }, 0);                         // wait while map is fully initilized
     } catch {}
   }

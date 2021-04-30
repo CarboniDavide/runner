@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ElementRef } from '@angular/core';
 import { ActivityWatcher, ActivityWatcherSate } from '../providers/geoLocator/activityWatcher';
 import { GeoLocator } from '../providers/geoLocator/geoLocator';
 import { GeoPoint } from '../providers/geoLocator/geoPoint';
@@ -11,7 +11,9 @@ import { GeoStorage } from '../providers/geoLocator/geoStorage';
 })
 export class TrackPage implements AfterContentInit{
 
+  isSuspended: boolean = false;
   isRunning: boolean = false;
+  isUnlock: boolean = false;
   center: GeoPoint = new GeoPoint(0,0);
   zoom: number = 3;
   marker: GeoPoint = new GeoPoint(0,0);
@@ -46,17 +48,27 @@ export class TrackPage implements AfterContentInit{
   }
 
   stopLocation() {
+    this.isSuspended = false;
+    this.isUnlock = false;
     this.isRunning=false;
     this.activityWatcher.stop();
     this.geoStorage.addTrack(this.activityWatcher.track);
   }
 
   pauseLocation() {
-    this.isRunning=false;
-    this.activityWatcher.suspend ();
+    this.isSuspended = true;
+    this.activityWatcher.suspend();
   }
 
-  onFullCircle(){
-    this.stopLocation();
+  unlock(){
+    this.isUnlock = true;
+  }
+
+  lock(){
+    if (this.isSuspended){
+      this.isSuspended = false;
+      this.activityWatcher.start();
+    }
+    this.isUnlock = false;
   }
 }

@@ -7,6 +7,9 @@ import { ButtonType } from './round_button.type';
   styleUrls: ['./round-buttom.component.scss'],
 })
 export class RoundButtomComponent implements AfterViewInit, OnInit {
+
+  @Input() disabledColor: any = "lightgray"
+  @Input() disabled: boolean = false;
   @Input() type: ButtonType | string =  ButtonType.stop;
   @Input() color: any = "black"
   @Input() iconColor: any = "white"
