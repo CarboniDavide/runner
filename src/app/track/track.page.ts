@@ -26,14 +26,7 @@ export class TrackPage implements AfterContentInit{
     private geolocator:GeoLocator
   ){}
 
-  ngAfterContentInit(): void {
-    this.geolocator.getCordinates()
-    .then( (point) => { 
-      this.center = point; 
-      this.zoom = 18;
-      this.marker = point;
-    })
-  }
+  ngAfterContentInit(): void {}
 
   getHight(): string {
     let navigation = this.el.nativeElement.querySelector("#navigation").getBoundingClientRect().height;
