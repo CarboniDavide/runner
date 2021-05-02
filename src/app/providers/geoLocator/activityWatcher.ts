@@ -17,9 +17,12 @@ export enum ActivityWatcherSate {
 @Injectable()
 export class ActivityWatcher{
 
-    readonly DEFAULAT_MAX_ACCURACY = 5;
+    readonly DEFAULAT_MAX_ACCURACY = 20;
 
-    currentPoint: GeoPoint;
+    private _currentPoint: GeoPoint;
+    public get currentPoint(): GeoPoint { return this._currentPoint; }
+    public set currentPoint(value: GeoPoint) { this._currentPoint = value; this._refresh(); }
+    
     oldPoint: GeoPoint;
 
     watcher?: Subscription = null;
@@ -32,6 +35,10 @@ export class ActivityWatcher{
     isRunning: Boolean = false;
     geolocator: GeoLocator;
     isGpsConnected: Boolean = false;
+
+    private _onNewLocation?: Function = () => {};
+    public get onNewLocation(): Function | null { return this._onNewLocation; }
+    public set onNewLocation(value: Function | null) { this._onNewLocation = (value == null) ? () => {} : value; }
 
     constructor(){
         this.geolocator = new GeoLocator();
@@ -53,11 +60,12 @@ export class ActivityWatcher{
         this.watcher = this.geolocator.watchPosition().subscribe(
         (res) => {
             this.error = null;
+            this.isGpsConnected = true;
             if (res.accuracy > this.maxAccuracy ){ return; }
-            this.oldPoint = this.currentPoint;
+            if (this.currentPoint != null){ this.oldPoint = this.currentPoint; }
             this.currentPoint = res; 
             this.geolocator.lastPosition = res;
-            this.isGpsConnected = true;
+            this.onNewLocation();
         },
         (error) => {
             this.error = error.message;
@@ -70,18 +78,11 @@ export class ActivityWatcher{
         if (this.watcher != null) { this.watcher.unsubscribe(); }
     }
 
-    private _run(){
-        if (!this.isGpsConnected){ return; }
-        this.state = ActivityWatcherSate.Run;
-        if (this.oldPoint == null ) { this.track.points.push(this.currentPoint); return; }
+    private _refresh(){
+        if (this.state != ActivityWatcherSate.Run){ return; }
+        this.track.points.push(this.currentPoint);
+        if (this.oldPoint == null){ return }
         this.totalDistance = this.totalDistance + this.track.getABDistance(this.oldPoint, this.currentPoint);
-
-        //store
-        if (
-        (this.currentPoint.getLatitude(5) != this.oldPoint.getLatitude(5)) || 
-        (this.currentPoint.getLongitude(5) != this.oldPoint.getLongitude(5))){
-            this.track.points.push(this.oldPoint);
-        }
     }
 
     start(){
@@ -91,7 +92,7 @@ export class ActivityWatcher{
         this.timer.start();
         if (this.state.toString() == ActivityWatcherSate.Pause) { return; }
         if (this.state.toString() == ActivityWatcherSate.Suspend) { return; }
-        this._run();
+        this.state = ActivityWatcherSate.Run;
     }
 
     stop(){
