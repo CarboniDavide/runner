@@ -1,4 +1,54 @@
-.resume{
+#resume{
     width: 100%;
-    padding: 30px;
+    padding: 20px;
+    margin-bottom: 7px;
 }
+
+#activity-list{
+    overflow: scroll;
+}
+
+.shadow{
+    box-shadow: 0 8px 7px -7px rgba(0, 0, 0, 0.7);
+    transition: 0.5s;
+}
+
+#activity-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0;
+    padding: 0;
+}
+
+circle {
+    fill: green;
+    stroke: green; 
+    stroke-width: 2px;
+    stroke-opacity: 1;
+  }
+  
+  .pulse {
+    fill: white;
+    fill-opacity: 0;
+    transform-origin: 50% 50%;
+    animation-duration: 2s;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+  }
+  
+  @keyframes pulse {
+    from {
+      stroke-width: 3px;
+      stroke-opacity: 1;
+      transform: scale(0.3);
+    }
+    to {
+      stroke-width: 0;
+      stroke-opacity: 0;
+      transform: scale(2);
+    }
+  }

@@ -40,6 +40,26 @@ export class ActivityWatcher{
     public get onNewLocation(): Function | null { return this._onNewLocation; }
     public set onNewLocation(value: Function | null) { this._onNewLocation = (value == null) ? () => {} : value; }
 
+    private _onClear?: Function = () => {};
+    public get onClear(): Function | null { return this._onClear; }
+    public set onClear(value: Function | null) { this._onClear = (value == null) ? () => {} : value; }
+    
+    private _onPause?: Function = () => {};
+    public get onPause(): Function | null { return this._onPause; }
+    public set onPause(value: Function | null) { this._onPause = (value == null) ? () => {} : value; }
+    
+    private _onSuspend?: Function = () => {};
+    public get onSuspend(): Function | null { return this._onSuspend; }
+    public set onSuspend(value: Function | null) { this._onSuspend = (value == null) ? () => {} : value; }
+
+    private _onStop?: Function = () => {};
+    public get onStop(): Function | null { return this._onStop; }
+    public set onStop(value: Function | null) { this._onStop = (value == null) ? () => {} : value; }
+
+    private _onStart?: Function = () => {};
+    public get onStart(): Function | null { return this._onStart; }
+    public set onStart(value: Function | null) { this._onStart = (value == null) ? () => {} : value; }
+
     constructor(){
         this.geolocator = new GeoLocator();
         this._gpsRun();

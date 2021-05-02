@@ -8,7 +8,7 @@ import { DomController, Platform } from '@ionic/angular';
 })
 export class IonProgressiveCircleButtonComponent implements AfterViewInit, OnInit {
 
-  readonly USE_SHADOW: boolean = true;                               // use shadow css style          
+  readonly USE_SHADOW: boolean = false;                               // use shadow css style          
   readonly REVERSE_ANIM: boolean = true;                             // reverese animation after stroke bar is charge is complete    
   readonly DISABLED: boolean = false;                                 // disable button
   readonly START_AT: number = 0;                                      // start stroke point animation in deg  

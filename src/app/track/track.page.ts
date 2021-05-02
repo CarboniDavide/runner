@@ -45,6 +45,7 @@ export class TrackPage implements AfterContentInit{
     this.isUnlock = false;
     this.isRunning=false;
     this.activityWatcher.stop();
+    if (this.activityWatcher.track.points.length <= 1 ) { return }
     this.geoStorage.addTrack(this.activityWatcher.track);
   }
 

@@ -9,14 +9,25 @@
   </ion-refresher-content>   
   </ion-refresher>  
 
-  <div class="resume" center>
+  <div id="resume" center>
+    <div id="activity-info" [style.display]="activityWatcher.isRunning ? 'flex' : 'none' ">
+      <svg class = "button" height = "40px" width = "40px">
+        <circle cx = "50%" cy = "50%" r = "5px"></circle>
+        <circle class = "pulse" cx = "50%" cy = "50%" r = "7px"></circle>
+      </svg>
+      <!-- <ion-text color="success">
+        <p>running</p>
+      </ion-text> -->
+    </div>
     <ion-text color="secondary" class="ion-text-center">
       <h1>{{ getTotalDistance() }} Km</h1>
       <p>Disance</p>
     </ion-text>
   </div>
 
-  <app-activity-card *ngFor="let track of tracks, let i = index" [track]="track" [index]="i"></app-activity-card>
+  <div id="activity-list" [style.height]="getHight()" (scroll)="shadowed()">
+    <app-activity-card *ngFor="let track of tracks, let i = index" [track]="track" [index]="i"></app-activity-card>
+  </div>
 
 </ion-content>
 

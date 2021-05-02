@@ -32,13 +32,11 @@
   <div id="map-container" [style.opacity]="isRunning ? 1 : 0.4">
     <app-ion-leaflet
       [center]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : center"
-      [zoom]="zoom"
+      [zoom]="activityWatcher.isGpsConnected ? 18 : 3"
       [marker]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : marker"
       [height]="getHight()">
     </app-ion-leaflet>
   </div>
-
-  
 
   <div id="navigaor-control-action">
     <app-round-buttom *ngIf="!isRunning" [size]="80" [enableChargeAnimation]="true" [type]="'play'"  [color]="'rgba(27,95,113,1)'" [strokeColor]="'rgba(27,95,113,1)'" [iconColor]="'white'" (onChargeComplete)="traceLocation()"></app-round-buttom>
