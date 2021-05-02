@@ -16,6 +16,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   @Input() zoom?: number = 3;
   @Input() width?: string = '100%';
   @Input() height?: string = '100%';
+  @Input() opacity?: number = 1;
 
   // define personale marker
   iconDefault = Leaflet.icon({

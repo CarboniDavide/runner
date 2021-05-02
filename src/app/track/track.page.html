@@ -29,24 +29,26 @@
     </div>
   </div>
 
-  <div id="map-container" [style.opacity]="isRunning ? 1 : 0.4">
+  <div id="map-container">
     <app-ion-leaflet
+      [opacity]="isRunning ? 1 : 0.4" 
       [center]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : center"
       [zoom]="activityWatcher.isGpsConnected ? 18 : 3"
       [marker]="activityWatcher.isGpsConnected ? activityWatcher.currentPoint : marker"
       [height]="getHight()">
     </app-ion-leaflet>
-  </div>
 
-  <div id="navigaor-control-action">
-    <app-round-buttom *ngIf="!isRunning" [size]="80" [enableChargeAnimation]="true" [type]="'play'"  [color]="'rgba(27,95,113,1)'" [strokeColor]="'rgba(27,95,113,1)'" [iconColor]="'white'" (onChargeComplete)="traceLocation()"></app-round-buttom>
-    <div id="navigaor-control-inner" *ngIf="isRunning">
-      <app-round-buttom [size]="60" [disabled]="!isUnlock" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [iconColor]="'white'" (click)="stopLocation()" ></app-round-buttom>
-      <app-round-buttom [size]="80" *ngIf="!isUnlock" [enableChargeAnimation]="true" [type]="'unlock'" [color]="'rgba(0,0,202,1)'" [strokeColor]="'rgba(0,0,202,1)'" [iconColor]="'white'" (onChargeComplete)="unlock()" ></app-round-buttom>
-      <app-round-buttom [size]="80" *ngIf="isUnlock" [type]="'reload'" [color]="'rgba(0,0,202,1)'" [iconColor]="'white'" (click)="lock()" ></app-round-buttom>
-      <app-round-buttom [size]="60" *ngIf="!isSuspended" [disabled]="!isUnlock" [type]="'pause'" [color]="'rgba(0,200,0,1)'" [iconColor]="'white'" (click)="pauseLocation()" ></app-round-buttom>
-      <app-round-buttom [size]="60" *ngIf="isSuspended"  [disabled]="!isUnlock" [type]="'play'" [color]="'rgba(0,200,0,1)'" [iconColor]="'white'" (click)="lock()" ></app-round-buttom>
-    </div>  
+    <div id="navigaor-control-action">
+      <app-round-buttom *ngIf="!isRunning" [size]="80" [enableChargeAnimation]="true" [type]="'play'"  [color]="'rgba(27,95,113,1)'" [strokeColor]="'rgba(27,95,113,1)'" [iconColor]="'white'" (onChargeComplete)="traceLocation()"></app-round-buttom>
+      <div id="navigaor-control-inner" *ngIf="isRunning">
+        <app-round-buttom [size]="60" [disabled]="!isUnlock" [type]="'stop'" [color]="'rgba(218,105,102,1)'" [iconColor]="'white'" (click)="stopLocation()" ></app-round-buttom>
+        <app-round-buttom [size]="80" *ngIf="!isUnlock" [enableChargeAnimation]="true" [type]="'unlock'" [color]="'rgba(0,0,202,1)'" [strokeColor]="'rgba(0,0,202,1)'" [iconColor]="'white'" (onChargeComplete)="unlock()" ></app-round-buttom>
+        <app-round-buttom [size]="80" *ngIf="isUnlock" [type]="'reload'" [color]="'rgba(0,0,202,1)'" [iconColor]="'white'" (click)="lock()" ></app-round-buttom>
+        <app-round-buttom [size]="60" *ngIf="!isSuspended" [disabled]="!isUnlock" [type]="'pause'" [color]="'rgba(0,200,0,1)'" [iconColor]="'white'" (click)="pauseLocation()" ></app-round-buttom>
+        <app-round-buttom [size]="60" *ngIf="isSuspended"  [disabled]="!isUnlock" [type]="'play'" [color]="'rgba(0,200,0,1)'" [iconColor]="'white'" (click)="lock()" ></app-round-buttom>
+      </div>  
+    </div>
+
   </div>
  
 </ion-content>
