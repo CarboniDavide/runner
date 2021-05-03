@@ -1,6 +1,6 @@
 import { GeoPoint } from './geoPoint';
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
-import { GeoLocatorProvider } from './geoLocatorProvider';
+import { GeoLocatorProvider, GpsState } from './geoLocatorProvider';
 import { Observable } from 'rxjs';
 
 export class IonicNativeLocatorProvider extends GeoLocatorProvider {
@@ -15,9 +15,11 @@ export class IonicNativeLocatorProvider extends GeoLocatorProvider {
   }  
   
   async getCordinates(): Promise <GeoPoint|any> {
+    this.gpsState = GpsState.Waiting;
     return new Promise((resolve, rejects ) => {
       this._geolocation.getCurrentPosition(this._geoOptions)
       .then( (p) => { 
+        this.gpsState = GpsState.Connected;
         resolve(new GeoPoint(
           p.coords.latitude, 
           p.coords.longitude, 
@@ -30,17 +32,20 @@ export class IonicNativeLocatorProvider extends GeoLocatorProvider {
         ));
       })
       .catch( (error) => { 
+        this.gpsState = GpsState.Error;
         rejects(error);
       });
     });
   }
 
   watchPosition(): Observable <GeoPoint|any> {
+    this.gpsState = GpsState.Waiting;
     return new Observable((observer: GeoPoint | any) => {
       // observable execution
       let watch = this._geolocation.watchPosition({enableHighAccuracy:true});
       watch.subscribe( 
         (res: Geoposition) => {
+          this.gpsState = GpsState.Connected;
           try {
             observer.next(
               new GeoPoint(
@@ -55,10 +60,12 @@ export class IonicNativeLocatorProvider extends GeoLocatorProvider {
               )
             );
           } catch(error) {
+            this.gpsState = GpsState.Error;
             observer.error(error);
           }
         },
         (err: PositionError) => {
+          this.gpsState = GpsState.Error;
           observer.error(err);
         }
       );

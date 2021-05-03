@@ -27,7 +27,6 @@ export class ActivityWatcher{
     track: GeoTrack = null;
     timer: Timer = null;
     geolocator: GeoLocator = null;
-    isGpsConnected: Boolean = false;
 
     private _currentPoint: GeoPoint;
     public get currentPoint(): GeoPoint { return this._currentPoint; }
@@ -76,11 +75,9 @@ export class ActivityWatcher{
     }
 
     private _gpsRun(){
-        this.isGpsConnected = false;
         this.watcher = this.geolocator.watchPosition().subscribe(
         (res) => {
             this.error = null;
-            this.isGpsConnected = true;
             if (res.accuracy > this.maxAccuracy ){ return; }
             if (this.currentPoint != null){ this.oldPoint = this.currentPoint; }
             this.currentPoint = res; 
@@ -92,7 +89,6 @@ export class ActivityWatcher{
     }
 
     private _gpsStop(){
-        this.isGpsConnected = false;
         if (this.watcher != null) { this.watcher.unsubscribe(); }
     }
 

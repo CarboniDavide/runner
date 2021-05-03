@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { GeoLocatorProvider } from "./geoLocatorProvider";
+import { GeoLocatorProvider, GpsState } from "./geoLocatorProvider";
 import { GeoPoint } from "./geoPoint";
 import { IonicNativeLocatorProvider } from "./ionicNativeLocatorProvider";
 
@@ -28,5 +28,7 @@ export class GeoLocator {
     watchPosition(): Observable <GeoPoint|any>{
         return this.geoProvider.watchPosition();
     }
+
+    public get gpsState(): GpsState { return this.geoProvider.gpsState; }
 
 }
