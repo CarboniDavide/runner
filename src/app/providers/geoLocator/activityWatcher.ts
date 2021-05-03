@@ -8,33 +8,34 @@ import { GeoTrack } from "./geoTrack";
 
 export enum ActivityWatcherSate {
     Run = "Run",
-    Aborted = "Aborted",
     Stop = "Stop",
     Pause = "Pause",
-    Suspend = "Suspend"
+    Suspend = "Suspend",
+    Clear = "Clear"
 }
 
 @Injectable()
 export class ActivityWatcher{
 
     readonly DEFAULAT_MAX_ACCURACY = 20;
+    
+    oldPoint: GeoPoint;
+    watcher?: Subscription = null;
+    error?: string = null;
+    maxAccuracy: number = this.DEFAULAT_MAX_ACCURACY;
+    totalDistance: number = 0;
+    track: GeoTrack = null;
+    timer: Timer = null;
+    geolocator: GeoLocator = null;
+    isGpsConnected: Boolean = false;
 
     private _currentPoint: GeoPoint;
     public get currentPoint(): GeoPoint { return this._currentPoint; }
     public set currentPoint(value: GeoPoint) { this._currentPoint = value; this._refresh(); }
-    
-    oldPoint: GeoPoint;
 
-    watcher?: Subscription = null;
-    error?: string = null;
-    maxAccuracy: number = this.DEFAULAT_MAX_ACCURACY;
-    state: ActivityWatcherSate = ActivityWatcherSate.Stop;
-    totalDistance: number = 0;
-    track: GeoTrack = null;
-    timer: Timer = new Timer();
-    isRunning: Boolean = false;
-    geolocator: GeoLocator;
-    isGpsConnected: Boolean = false;
+    private _state: ActivityWatcherSate;
+    public get state(): ActivityWatcherSate { return this._state; }
+    public set state(value: ActivityWatcherSate) { this._state = value; eval("this.on" + this.state.charAt(0).toUpperCase() + this.state.slice(1) + "()"); }
 
     private _onNewLocation?: Function = () => {};
     public get onNewLocation(): Function | null { return this._onNewLocation; }
@@ -56,21 +57,20 @@ export class ActivityWatcher{
     public get onStop(): Function | null { return this._onStop; }
     public set onStop(value: Function | null) { this._onStop = (value == null) ? () => {} : value; }
 
-    private _onStart?: Function = () => {};
-    public get onStart(): Function | null { return this._onStart; }
-    public set onStart(value: Function | null) { this._onStart = (value == null) ? () => {} : value; }
+    private _onRun?: Function = () => {};
+    public get onRun(): Function | null { return this._onRun; }
+    public set onRun(value: Function | null) { this._onRun = (value == null) ? () => {} : value; }
 
     constructor(){
         this.geolocator = new GeoLocator();
+        this._init();
         this._gpsRun();
     }
 
     private _init(){
         this.track = new GeoTrack();
         this.totalDistance = 0;
-        this.state = ActivityWatcherSate.Stop;
         this.error = null;
-        if (this.timer != null) { this.timer.stop(); }
         this.timer = new Timer();
         if (this.watcher != null){ this.watcher.unsubscribe; }
     }
@@ -87,9 +87,7 @@ export class ActivityWatcher{
             this.geolocator.lastPosition = res;
             this.onNewLocation();
         },
-        (error) => {
-            this.error = error.message;
-        }
+        (error) => { this.error = error.message; }
         );
     }
 
@@ -105,36 +103,35 @@ export class ActivityWatcher{
         this.totalDistance = this.totalDistance + this.track.getABDistance(this.oldPoint, this.currentPoint);
     }
 
-    start(){
-        this.isRunning = true;
-        if (this.state.toString() == ActivityWatcherSate.Run) { return; }
-        if (this.state.toString() == ActivityWatcherSate.Stop) { this._init(); }
-        this.timer.start();
-        if (this.state.toString() == ActivityWatcherSate.Pause) { return; }
-        if (this.state.toString() == ActivityWatcherSate.Suspend) { return; }
+    run(){
+        if (this.state == ActivityWatcherSate.Run) { return; }
+        if (this.state == ActivityWatcherSate.Stop) { this._init(); }
         this.state = ActivityWatcherSate.Run;
+        this.timer.start();
     }
 
     stop(){
-        this.isRunning = false;
+        if (this.state == ActivityWatcherSate.Stop) { return; }
         this.state = ActivityWatcherSate.Stop;
         this.track.endAt = new Date().getTime();
-        if (this.timer != null) { this.timer.stop(); }
+        this.timer.stop();
     }
 
     suspend(){
-        this.isRunning = false;
+        if (this.state == ActivityWatcherSate.Suspend) { return; }
         this.state = ActivityWatcherSate.Suspend;
-        if (this.timer != null) { this.timer.suspend(); }
+        this.timer.suspend();
     }
 
     pause(){
-        this.isRunning = false;
+        if (this.state == ActivityWatcherSate.Pause) { return; }
         this.state = ActivityWatcherSate.Pause;
-        if (this.timer != null) { this.timer.pause(); }
+        this.timer.pause();
     }
 
     clear(){
+        if (this.state == ActivityWatcherSate.Clear) { return; }
+        this.state = ActivityWatcherSate.Clear;
         this.stop();
         this._gpsStop();
         this._init();

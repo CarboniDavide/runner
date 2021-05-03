@@ -13,6 +13,8 @@ import { ThisReceiver } from '@angular/compiler';
 export class TracksPage{
 
   tracks: Array<GeoTrack> = new Array<GeoTrack>();
+  disableRefresch:Boolean = false;
+  totalDistance: string = '0';
 
   constructor(
     public geoStorage: GeoStorage, 
@@ -21,17 +23,19 @@ export class TracksPage{
     private _element: ElementRef,
     private _renderer: Renderer2
   ){
-    this.tracks = this.geoStorage.tracks;
+    // this.tracks = this.geoStorage.tracks;
   }
 
   ionViewDidEnter(): void {
     this.tracks = this.geoStorage.tracks;
+    this.totalDistance = this.getTotalDistance();
   }
   
   shadowed(){
     let list = this._element.nativeElement.querySelector("#activity-list");
     let resume = this._element.nativeElement.querySelector("#resume");
-    list.scrollTop != 0 ? this._renderer.addClass(resume, "shadow") : this._renderer.removeClass(resume, "shadow")
+    list.scrollTop != 0 ? this._renderer.addClass(resume, "shadow") : this._renderer.removeClass(resume, "shadow");
+    this.disableRefresch = (list.scrollTop != 0);
   }
 
   getTotalDistance(): string{
@@ -49,6 +53,7 @@ export class TracksPage{
       if (escape) { event.target.complete(); }
     }, 10000);
     this.tracks = this.geoStorage.tracks;
+    this.totalDistance = this.getTotalDistance();
     escape = true;
     event.target.complete();
     clearTimeout(waiter);

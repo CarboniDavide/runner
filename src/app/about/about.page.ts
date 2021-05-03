@@ -20,9 +20,9 @@ export class AboutPage implements OnInit {
 
   getAccuracy(event){
     this.activityWatcher.maxAccuracy = event.detail.value;
-    if (this.activityWatcher.isRunning) { 
+    if (this.activityWatcher.state == "Run") { 
       this.activityWatcher.clear();
-      this.activityWatcher.start();
+      this.activityWatcher.run();
     }
   }
 

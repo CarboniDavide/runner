@@ -11,7 +11,7 @@
 
     <ion-item>
       Storage
-      <ion-button slot="end" color="warning" (click)="confirmDelete()" [attr.disabled]="this.activityWatcher.isRunning"> Clear Data </ion-button>
+      <ion-button slot="end" color="warning" (click)="confirmDelete()" [attr.disabled]="this.activityWatcher.state == 'Run'"> Clear Data </ion-button>
     </ion-item>
   </ion-list>
 

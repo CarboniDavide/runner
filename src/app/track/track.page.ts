@@ -26,7 +26,12 @@ export class TrackPage implements AfterContentInit{
     private geolocator:GeoLocator
   ){}
 
-  ngAfterContentInit(): void {}
+  ngAfterContentInit(): void {
+    this.activityWatcher.onRun = () => console.log("Run");
+    this.activityWatcher.onSuspend = () => console.log("Suspend");
+    this.activityWatcher.onStop = () => console.log("Stop");
+    this.activityWatcher.onClear = () => console.log("Clear");
+  }
 
   getHight(): string {
     let navigation = this.el.nativeElement.querySelector("#navigation").getBoundingClientRect().height;
@@ -36,7 +41,7 @@ export class TrackPage implements AfterContentInit{
   }
 
   traceLocation() {
-    this.activityWatcher.start();
+    this.activityWatcher.run();
     this.isRunning = true;
   }
 
@@ -61,7 +66,7 @@ export class TrackPage implements AfterContentInit{
   lock(){
     if (this.isSuspended){
       this.isSuspended = false;
-      this.activityWatcher.start();
+      this.activityWatcher.run();
     }
     this.isUnlock = false;
   }

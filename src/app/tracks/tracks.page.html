@@ -1,6 +1,6 @@
 <ion-content color="light">
 
-  <ion-refresher slot ="fixed" disabled="false" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">  
+  <ion-refresher slot ="fixed" [disabled]="disableRefresch" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">  
     <ion-refresher-content  
     pullingIcon="arrow-down"  
     pullingText="Pull to refresh"  
@@ -10,7 +10,7 @@
   </ion-refresher>  
 
   <div id="resume" center>
-    <div id="activity-info" [style.display]="activityWatcher.isRunning ? 'flex' : 'none' ">
+    <div id="activity-info" [style.display]="activityWatcher.state == 'Run' ? 'flex' : 'none' ">
       <svg class = "button" height = "40px" width = "40px">
         <circle cx = "50%" cy = "50%" r = "5px"></circle>
         <circle class = "pulse" cx = "50%" cy = "50%" r = "7px"></circle>
@@ -20,7 +20,7 @@
       </ion-text> -->
     </div>
     <ion-text color="secondary" class="ion-text-center">
-      <h1>{{ getTotalDistance() }} Km</h1>
+      <h1>{{ totalDistance }} Km</h1>
       <p>Disance</p>
     </ion-text>
   </div>
