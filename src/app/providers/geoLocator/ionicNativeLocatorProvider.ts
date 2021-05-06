@@ -18,7 +18,7 @@ export class IonicNativeLocatorProvider extends GeoLocatorProvider {
     this.gpsState = GpsState.Waiting;
     return new Promise((resolve, rejects ) => {
       this._geolocation.getCurrentPosition(this._geoOptions)
-      .then( (p) => { 
+      .then( (p) => {
         this.gpsState = GpsState.Connected;
         resolve(new GeoPoint(
           p.coords.latitude, 

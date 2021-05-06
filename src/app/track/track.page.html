@@ -16,8 +16,8 @@
             <ion-text color="primary">SPEED</ion-text>
           </ion-col>
           <ion-col class="activity-navigator-element medium">
-            <ion-icon *ngIf="activityWatcher.geolocator.gpsState == 'Connected'"  id="gps-icon" name="cellular" [style.color]= "'green'"></ion-icon>
-            <ion-icon *ngIf="activityWatcher.geolocator.gpsState == 'Waiting'" id="gps-icon" name="cellular-outline" [style.color]= "'red'"></ion-icon>
+            <ion-icon *ngIf="activityWatcher.isReady" id="gps-icon" name="cellular" [style.color]= "'green'"></ion-icon>
+            <ion-icon *ngIf="!activityWatcher.isReady" id="gps-icon" name="cellular-outline" [style.color]= "'red'"></ion-icon>
             <ion-text color="primary">GPS</ion-text>
           </ion-col>
           <ion-col class="activity-navigator-element medium">
@@ -32,9 +32,9 @@
   <div id="map-container">
     <app-ion-leaflet
       [opacity]="isRunning ? 1 : 0.4" 
-      [center]="activityWatcher.geolocator.gpsState == 'Connected'  ? activityWatcher.currentPoint : center"
-      [zoom]="activityWatcher.geolocator.gpsState == 'Connected' ? 18 : 3"
-      [marker]="activityWatcher.geolocator.gpsState == 'Connected' ? activityWatcher.currentPoint : marker"
+      [center]="activityWatcher.isReady ? activityWatcher.currentPoint : center"
+      [zoom]="activityWatcher.isReady ? 18 : 3"
+      [marker]="activityWatcher.isReady ? activityWatcher.currentPoint : marker"
       [height]="getHight()">
     </app-ion-leaflet>
 

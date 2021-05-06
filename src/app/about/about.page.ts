@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { GeneralSetting } from '../providers/generalSetting';
 import { ActivityWatcher } from '../providers/geoLocator/activityWatcher';
 import { GeoStorage } from '../providers/geoLocator/geoStorage';
 
@@ -13,17 +14,17 @@ export class AboutPage implements OnInit {
   constructor(
     public activityWatcher: ActivityWatcher, 
     private geoStorage: GeoStorage, 
-    private alertController: AlertController
+    private alertController: AlertController,
+    public gSetting: GeneralSetting
   ) { }
 
   ngOnInit() {}
 
-  getAccuracy(event){
-    this.activityWatcher.maxAccuracy = event.detail.value;
-    if (this.activityWatcher.state == "Run") { 
-      this.activityWatcher.clear();
-      this.activityWatcher.run();
-    }
+  changeAccuracy(event){
+    this.gSetting.setAccuracy(event.detail.value);
+    let nextState = this.activityWatcher.state;
+    this.activityWatcher.clear();
+    if (nextState == "Run") { this.activityWatcher.run(); }
   }
 
   clearStorage(){

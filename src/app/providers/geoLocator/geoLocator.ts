@@ -14,21 +14,39 @@ class GeoLocatorFactory {
 @Injectable()
 export class GeoLocator {
 
-    geoProvider: GeoLocatorProvider;
-    lastPosition: GeoPoint;
+    private readonly MIN_ACCURACCY_REQUIRED = 20;
+
+    private _geoProvider: GeoLocatorProvider;
 
     constructor() {
-        this.geoProvider = GeoLocatorFactory.getGeolocatorProvider();
+        this._geoProvider = GeoLocatorFactory.getGeolocatorProvider();
     }
 
-    async getCordinates(): Promise <GeoPoint|any> {
-        return this.geoProvider.getCordinates();
+    async getCordinates(options = {}): Promise <GeoPoint|any> {
+        let gpsAccuracy = options['min_accuracy'] != null ? options['min_accuracy'] : this.MIN_ACCURACCY_REQUIRED;
+
+        return new Promise((resolve, rejects ) => {
+           this._geoProvider.getCordinates().then( (res: GeoPoint) => { 
+                if (res.accuracy <= gpsAccuracy) { resolve(res); }
+            }).catch( (error) => { 
+                rejects(error);
+            });
+        });
     }
 
-    watchPosition(): Observable <GeoPoint|any>{
-        return this.geoProvider.watchPosition();
+    watchPosition(options = {}): Observable <GeoPoint|any>{
+        
+        let gpsAccuracy = options['min_accuracy'] != null ? options['min_accuracy'] : this.MIN_ACCURACCY_REQUIRED;
+        
+        return new Observable((observer: GeoPoint | any) => {
+            let watch = this._geoProvider.watchPosition();
+            watch.subscribe(
+                (res: GeoPoint) => { if (res.accuracy <= gpsAccuracy) { observer.next(res); } },
+                (err: any) => { observer.error(err); }
+            )
+        });
     }
 
-    public get gpsState(): GpsState { return this.geoProvider.gpsState; }
+    public get gpsState(): GpsState { return this._geoProvider.gpsState; }
 
 }

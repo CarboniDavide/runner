@@ -26,12 +26,7 @@ export class TrackPage implements AfterContentInit{
     private geolocator:GeoLocator
   ){}
 
-  ngAfterContentInit(): void {
-    this.activityWatcher.onRun = () => console.log("Run");
-    this.activityWatcher.onSuspend = () => console.log("Suspend");
-    this.activityWatcher.onStop = () => console.log("Stop");
-    this.activityWatcher.onClear = () => console.log("Clear");
-  }
+  ngAfterContentInit(): void {}
 
   getHight(): string {
     let navigation = this.el.nativeElement.querySelector("#navigation").getBoundingClientRect().height;

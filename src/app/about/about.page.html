@@ -3,7 +3,7 @@
   <ion-list>
     <ion-item>
       Accuracy
-      <ion-range min="5" max="30" color="secondary" [value]="activityWatcher.maxAccuracy" (ionChange)="getAccuracy($event)">
+      <ion-range min="5" max="30" color="secondary" [value]="gSetting.gpsAccuracy" (ionChange)="changeAccuracy($event)">
         <ion-label slot="start">5</ion-label>
         <ion-label slot="end">30</ion-label>
       </ion-range>

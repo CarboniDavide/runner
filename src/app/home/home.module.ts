@@ -9,6 +9,7 @@ import { GeoStorage } from '../providers/geoLocator/geoStorage';
 import { Exchanger } from '../providers/exchanger';
 import { ComponentsModule } from '../components/components.module';
 import { ActivityWatcher } from '../providers/geoLocator/activityWatcher';
+import { GeneralSetting } from '../providers/generalSetting';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { ActivityWatcher } from '../providers/geoLocator/activityWatcher';
     ComponentsModule
   ],
   declarations: [HomePage],
-  providers: [ GeoStorage, Exchanger, ActivityWatcher ]
+  providers: [ GeoStorage, Exchanger, GeneralSetting, ActivityWatcher]
 })
 export class HomePageModule {}

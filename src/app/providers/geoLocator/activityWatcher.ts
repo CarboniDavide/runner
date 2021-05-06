@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 import { GeoLocator } from "./geoLocator";
 import { GeoPoint } from "./geoPoint";
 import { GeoTrack } from "./geoTrack";
-
+import { GeneralSetting } from '../generalSetting';
 
 export enum ActivityWatcherSate {
     Run = "Run",
@@ -16,17 +16,16 @@ export enum ActivityWatcherSate {
 
 @Injectable()
 export class ActivityWatcher{
-
-    readonly DEFAULAT_MAX_ACCURACY = 20;
     
     oldPoint: GeoPoint;
     watcher?: Subscription = null;
     error?: string = null;
-    maxAccuracy: number = this.DEFAULAT_MAX_ACCURACY;
+    maxAccuracy?: number = null;
     totalDistance: number = 0;
     track: GeoTrack = null;
     timer: Timer = null;
     geolocator: GeoLocator = null;
+    isReady: Boolean = false;
 
     private _currentPoint: GeoPoint;
     public get currentPoint(): GeoPoint { return this._currentPoint; }
@@ -60,28 +59,36 @@ export class ActivityWatcher{
     public get onRun(): Function | null { return this._onRun; }
     public set onRun(value: Function | null) { this._onRun = (value == null) ? () => {} : value; }
 
-    constructor(){
+    constructor(private gSetting: GeneralSetting){
         this.geolocator = new GeoLocator();
-        this._init();
-        this._gpsRun();
+        this._init().then( () => { this._gpsRun(); }) ;
     }
 
-    private _init(){
-        this.track = new GeoTrack();
-        this.totalDistance = 0;
-        this.error = null;
-        this.timer = new Timer();
-        if (this.watcher != null){ this.watcher.unsubscribe; }
+    private _init(): Promise<any>{
+        return new Promise((resolve, rejects ) => {
+            this.track = new GeoTrack();
+            this.totalDistance = 0;
+            this.error = null;
+            this.timer = new Timer();
+            if (this.watcher != null){ this.watcher.unsubscribe; }
+            this.gSetting.getAccuracy().then( (r) => { 
+                this.maxAccuracy = r; 
+                resolve(true);
+            }).catch( (error) => { 
+                rejects(error);
+            });
+        });
     }
 
     private _gpsRun(){
-        this.watcher = this.geolocator.watchPosition().subscribe(
+        this.isReady = false;
+        
+        this.watcher = this.geolocator.watchPosition( { min_accuracy: this.maxAccuracy }).subscribe(
         (res) => {
             this.error = null;
-            if (res.accuracy > this.maxAccuracy ){ return; }
             if (this.currentPoint != null){ this.oldPoint = this.currentPoint; }
             this.currentPoint = res; 
-            this.geolocator.lastPosition = res;
+            this.isReady = true;
             this.onNewLocation();
         },
         (error) => { this.error = error.message; }
@@ -130,6 +137,6 @@ export class ActivityWatcher{
         this.state = ActivityWatcherSate.Clear;
         this.stop();
         this._gpsStop();
-        this._init();
+        this._init().then( () => { this._gpsRun(); }) ;
     }
 }
