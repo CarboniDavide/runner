@@ -23,6 +23,9 @@ export class GeoLocator {
     }
 
     async getCordinates(options = {}): Promise <GeoPoint|any> {
+
+        if (Object.keys(options).length === 0) { return this._geoProvider.getCordinates() };
+
         let gpsAccuracy = options['min_accuracy'] != null ? options['min_accuracy'] : this.MIN_ACCURACCY_REQUIRED;
 
         return new Promise((resolve, rejects ) => {
@@ -35,7 +38,9 @@ export class GeoLocator {
     }
 
     watchPosition(options = {}): Observable <GeoPoint|any>{
-        
+
+        if (Object.keys(options).length === 0) { return this._geoProvider.watchPosition() };
+
         let gpsAccuracy = options['min_accuracy'] != null ? options['min_accuracy'] : this.MIN_ACCURACCY_REQUIRED;
         
         return new Observable((observer: GeoPoint | any) => {
