@@ -91,8 +91,7 @@ export class ActivityWatcher{
             this.isReady = true;
             this.onNewLocation();
         },
-        (error) => { this.error = error.message; }
-        );
+        (error) => { this.error = error.message; });
     }
 
     private _gpsStop(){
