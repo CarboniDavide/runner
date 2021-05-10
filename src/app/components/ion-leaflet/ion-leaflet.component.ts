@@ -30,9 +30,61 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     tooltipAnchor: [16, -28],
   });
 
+  // define base polyline
+  polylineOptions = {
+    color: 'rgba(0,128,255,1)',
+    smoothFactor: 1,
+    weight: 7,
+    lineCap: "round",
+    lineJoin: "round"
+  }
+
+  // define circle options
+  circleOptions = {
+    stroke: true,
+    weight: "8",
+    color: "green",
+    fillColor: "white",
+    fillOpacity: 1,
+    radius: 5.0,
+  }
+
+  // define circle marker options
+  circleMarkerOptions = {
+    stroke: true,
+    weight: "7",
+    color: "rgba(0,128,255,1)",
+    fillColor: "white",
+    fillOpacity: 1,
+    radius: 10.0,
+  }
+
+  // define circle marker options
+  startMarkerOptions = {
+    stroke: true,
+    weight: "7",
+    color: "rgba(76,153,0,1)",
+    fillColor: "white",
+    fillOpacity: 1,
+    radius: 10.0,
+  }
+
+  // define circle marker options
+  endMarkerOptions = {
+    stroke: true,
+    weight: "7",
+    color: "rgba(255,51,51,1)",
+    fillColor: "white",
+    fillOpacity: 1,
+    radius: 10.0,
+  }
+
+  private _startMarker: any = null;
+  private _endMarker: any = null;
   private _marker: any = null;
   private _polyline: any = null;
   private _map: Leaflet.Map;
+  private _circle: any = null;
   
   style: any = {
     mapNick: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -54,7 +106,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.track) { this.addTrackToMap(); }
-    if (changes.marker) { this.addMarkerToMap(); }
+    if (changes.marker) { this.addCircleMarkerToMap(); }
     if (changes.center) { this.setMapCenter(); }
     if (changes.zoom) { this.setZoom(); }
     setTimeout(() => { this._map.invalidateSize(); }, 0);
@@ -85,14 +137,37 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     let line = this.track.points.map( p => ([p.latitude, p.longitude]) )            // prepare a new line using lat and long from ponits
     this.removeTrackFromMap();                                                      // remove old polyline before
     this.removeMarkerToMap();                                                       // remove old marker from map
-    this._polyline = Leaflet.polyline(line, {color: 'blue'}).addTo(this._map);      // add new polyline
+    this.removeUiToMap(this._startMarker);
+    this.removeUiToMap(this._endMarker);
+    this._polyline = Leaflet.polyline(line, this.polylineOptions).addTo(this._map);      // add new polyline
     if (this.track.points.length != 0){                                             // use a valid track (with almost one point)
       this._map.fitBounds(this._polyline.getBounds());                              // zoom the map to the polyline
+      let firstPoint = this.track.points[0];
+      let lastPoint = this.track.points[this.track.points.length - 1];
+      this._startMarker = Leaflet.circleMarker([firstPoint.latitude, firstPoint.longitude], this.startMarkerOptions).addTo(this._map);
+      this._endMarker = Leaflet.circleMarker([lastPoint.latitude, lastPoint.longitude], this.endMarkerOptions).addTo(this._map);
     }
   }
 
   removeTrackFromMap() {
     if (this._polyline != null) { this._polyline.remove(this._map);}
+  }
+
+
+  addCircleToMap(){
+    if (this._map == null) {  
+      this.leafletMap();                                                         // initialise map before
+      setTimeout(() => { this.addCircleToMap(); }, 0);                           // add track after map is fully initialized
+      return;
+    }    
+
+    this.removeCircleFromMap();
+    Leaflet.circle([
+      this.center.latitude, this.center.longitude], this.circleOptions).addTo(this._map);
+  }
+
+  removeCircleFromMap() {
+    if (this._circle != null) { this._circle.remove(this._map);}
   }
 
   addMarkerToMap(){
@@ -108,6 +183,22 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeMarkerToMap(){
+    if (this._marker != null) { this._marker.remove(this._map); }
+  }
+
+  addCircleMarkerToMap(){
+    if (this.marker == null) { return }
+    if (this._map == null) {  
+      this.leafletMap();                                                         // initialise map before
+      setTimeout(() => { this.addCircleMarkerToMap(); }, 0);                           // add track after map is fully initialized
+      return;
+    }    
+
+    this.removeCircleMarkerToMap();
+    this._marker = Leaflet.circleMarker([this.marker.latitude, this.marker.longitude], this.circleMarkerOptions).addTo(this._map);
+  }
+
+  removeCircleMarkerToMap(){
     if (this._marker != null) { this._marker.remove(this._map); }
   }
 
@@ -129,6 +220,10 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }   
     this._map.setView([this.center.latitude, this.center.longitude], this.zoom);
+  }
+
+  removeUiToMap(el){
+    if (el != null) { el.remove(this._map); }
   }
 
 }
