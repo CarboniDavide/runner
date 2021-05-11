@@ -119,13 +119,13 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
 
   loadLeafletMap() {
     try {
-      Leaflet.Marker.prototype.options.icon = this.iconDefault;                                   // load personale marker
-      this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.mapOptions)   // create leafletmap
-      this._map.setView([this.center.latitude, this.center.longitude]);                           // set center
-      this._map.on('resize', this.setMapCenter.bind(this));                                       // event on resize
-      Leaflet.tileLayer(this.mapStyle["mapNick"]).addTo(this._map);                                  // define map type
-      if (this.useScale) { Leaflet.control.scale().addTo(this._map); }                            // show / hide scale  
-      setTimeout(() => { this._map.invalidateSize(); }, 0);                                       // wait while map is fully initilized
+      Leaflet.Marker.prototype.options.icon = this.iconDefault;                                       // load personale marker
+      this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.mapOptions);   // create leafletmap
+      this._map.setView([this.center.latitude, this.center.longitude]);                               // set center
+      this._map.on('resize', this.setMapCenter.bind(this));                                           // event on resize
+      Leaflet.tileLayer(this.mapStyle["mapNick"]).addTo(this._map);                                   // define map type
+      if (this.useScale) { Leaflet.control.scale().addTo(this._map); }                                // show / hide scale  
+      setTimeout(() => { this._map.invalidateSize(); }, 0);                                           // wait while map is fully initilized
     } catch {}
   }
 
