@@ -11,7 +11,7 @@ import * as Leaflet from 'leaflet';
 export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() track?: GeoTrack = null;
-  @Input() marker?: GeoPoint = null;
+  @Input() marker?: GeoPoint = new GeoPoint(0,0);
   @Input() center?: GeoPoint = new GeoPoint(0,0);
   @Input() zoom?: number = 3;
   @Input() width?: string = '100%';
@@ -110,10 +110,13 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.track)  { this.addTrackToMap(); }
     if (changes.marker) { this.addCircleMarkerToMap(); }
     if (changes.center) { this.setMapCenter(); }
+    if (changes.height || changes.width)  { this.setMapCenter(); }
     if (changes.zoom)   { this.setZoom(); }
   }
 
-  ngOnInit() { this.loadLeafletMap(); }
+  ngOnInit() { 
+    if (this._map == null) { this.loadLeafletMap(); }
+  }
 
   ngOnDestroy() { this._map.remove(); }
 
@@ -122,7 +125,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
       Leaflet.Marker.prototype.options.icon = this.iconDefault;                                       // load personale marker
       this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.mapOptions);   // create leafletmap
       this._map.setView([this.center.latitude, this.center.longitude]);                               // set center
-      this._map.on('resize', this.setMapCenter.bind(this));                                           // event on resize
+      this._map.on('resize', this.setMapCenter.bind(this) );                                          // event on resize
       Leaflet.tileLayer(this.mapStyle["mapNick"]).addTo(this._map);                                   // define map type
       if (this.useScale) { Leaflet.control.scale().addTo(this._map); }                                // show / hide scale  
       setTimeout(() => { this._map.invalidateSize(); }, 0);                                           // wait while map is fully initilized
@@ -171,7 +174,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeUiToMap(...elements){
-    elements.forEach( (el) => {
+    elements.forEach( (el) => { 
       if (el != null) { el.remove(this._map); }
     })
   }
