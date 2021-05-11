@@ -1,8 +1,9 @@
 <ion-content [fullscreen]="true">
   <app-ion-leaflet 
-    [track]="exchanger.selecteTrack"
+    [track]="exchanger.selectedTrack"
     [center]="center"
     [zoom]="zoom"
     [marker]="marker"
+    [useScale]="true"
   ></app-ion-leaflet>
 </ion-content>

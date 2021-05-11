@@ -1,4 +1,4 @@
-import { AfterContentInit, Component } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component } from '@angular/core';
 import { Exchanger } from '../providers/exchanger';
 import { GeoLocator } from '../providers/geoLocator/geoLocator';
 import { GeoPoint } from '../providers/geoLocator/geoPoint';
@@ -8,7 +8,7 @@ import { GeoPoint } from '../providers/geoLocator/geoPoint';
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
 })
-export class MapPage implements AfterContentInit {
+export class MapPage implements AfterViewInit {
 
   constructor(public exchanger: Exchanger, private geolocator: GeoLocator) { }
 
@@ -16,12 +16,18 @@ export class MapPage implements AfterContentInit {
   zoom: number = 3;
   marker: GeoPoint = new GeoPoint(0,0);
 
-  ngAfterContentInit(): void {
+  ngAfterViewInit(): void {
+    this.zoom = this.exchanger.selecteTrack == null ? this.zoom : null;
+    this.marker = this.exchanger.selecteTrack == null ? this.marker : null;
+    this.center = this.exchanger.selecteTrack == null ? this.center : null;
+    
     this.geolocator.getCordinates()
     .then( (point) => { 
-      this.center = point; 
-      this.zoom = 18;
-      this.marker = point;
+      if (this.exchanger.selecteTrack == null) {
+        this.center = point; 
+        this.zoom = 18;
+        this.marker = point;
+      }
     })
   }
 

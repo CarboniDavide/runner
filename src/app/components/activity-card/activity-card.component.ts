@@ -40,7 +40,7 @@ export class ActivityCardComponent implements OnInit, AfterViewInit {
   }
 
   showTrack(){
-    this.exchanger.selecteTrack = this.track;
+    this.exchanger.selectedTrack = this.track;
     this.route.navigate(['/home/map']);
   }
 

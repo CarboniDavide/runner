@@ -18,6 +18,7 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
   @Input() height?: string = '100%';
   @Input() opacity?: number = 1;
   @Input() liveTrack?: boolean = false;
+  @Input() useScale?: boolean = false;
 
   // define personale marker
   iconDefault = Leaflet.icon({
@@ -79,14 +80,8 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     radius: 10.0,
   }
 
-  private _startMarker: any = null;
-  private _endMarker: any = null;
-  private _marker: any = null;
-  private _polyline: any = null;
-  private _map: Leaflet.Map;
-  private _circle: any = null;
-  
-  style: any = {
+  // define a list of map's style
+  mapStyle: any = {
     mapNick: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     sat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     cycle: 'https://dev.{s}.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
@@ -94,7 +89,8 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     stamen: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png'
   }
 
-  options: any = {
+  // map initial style
+  mapOptions: any = {
     attributionControl: false,
     zoomControl: false,
     draggable: true,
@@ -102,128 +98,82 @@ export class IonLeafletComponent implements OnInit, OnChanges, OnDestroy {
     zoom: this.zoom
   }
 
+  private _startMarker: any = null;
+  private _endMarker: any = null;
+  private _marker: any = null;
+  private _polyline: any = null;
+  private _map: Leaflet.Map;
+
   constructor(private _el: ElementRef) { }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.track) { this.addTrackToMap(); }
+    if (changes.track)  { this.addTrackToMap(); }
     if (changes.marker) { this.addCircleMarkerToMap(); }
     if (changes.center) { this.setMapCenter(); }
-    if (changes.zoom) { this.setZoom(); }
-    setTimeout(() => { this._map.invalidateSize(); }, 0);
+    if (changes.zoom)   { this.setZoom(); }
   }
 
-  ngOnInit() { this.leafletMap(); }
+  ngOnInit() { this.loadLeafletMap(); }
 
   ngOnDestroy() { this._map.remove(); }
 
-  leafletMap() {
+  loadLeafletMap() {
     try {
-      Leaflet.Marker.prototype.options.icon = this.iconDefault;                    // load personale marker
-      this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.options).setView([this.center.latitude, this.center.longitude]);
-      this._map.on('resize', this.setMapCenter.bind(this));
-      Leaflet.tileLayer(this.style["mapNick"]).addTo(this._map);
-      //Leaflet.control.scale().addTo(this._map);
-      setTimeout(() => { this._map.invalidateSize(); }, 0);                         // wait while map is fully initilized
+      Leaflet.Marker.prototype.options.icon = this.iconDefault;                                   // load personale marker
+      this._map = new Leaflet.map(this._el.nativeElement.querySelector("#mapId"), this.mapOptions)   // create leafletmap
+      this._map.setView([this.center.latitude, this.center.longitude]);                           // set center
+      this._map.on('resize', this.setMapCenter.bind(this));                                       // event on resize
+      Leaflet.tileLayer(this.mapStyle["mapNick"]).addTo(this._map);                                  // define map type
+      if (this.useScale) { Leaflet.control.scale().addTo(this._map); }                            // show / hide scale  
+      setTimeout(() => { this._map.invalidateSize(); }, 0);                                       // wait while map is fully initilized
     } catch {}
   }
 
   addTrackToMap() {
-    if (this.track == null) { return }
-    if (this._map == null) { 
-      this.leafletMap();                                                            // initialise map before
-      setTimeout(() => { this.addTrackToMap(); }, 0);                               // add track after map is fully initialized
-      return;
-    }                        
-    let line = this.track.points.map( p => ([p.latitude, p.longitude]) )            // prepare a new line using lat and long from ponits
-    this.removeTrackFromMap();                                                      // remove old polyline before
-    this.removeMarkerToMap();                                                       // remove old marker from map
-    this.removeUiToMap(this._startMarker);
-    this.removeUiToMap(this._endMarker);
-    this._polyline = Leaflet.polyline(line, this.polylineOptions).addTo(this._map);      // add new polyline
-    if (this.track.points.length != 0){                                             // use a valid track (with almost one point)
-      this._map.fitBounds(this._polyline.getBounds());                              // zoom the map to the polyline
-      let firstPoint = this.track.points[0];
-      let lastPoint = this.track.points[this.track.points.length - 1];
-      this._startMarker = Leaflet.circleMarker([firstPoint.latitude, firstPoint.longitude], this.startMarkerOptions).addTo(this._map);
-      this._endMarker = Leaflet.circleMarker([lastPoint.latitude, lastPoint.longitude], this.endMarkerOptions).addTo(this._map);
-    }
-  }
+    if (this._map == null) { this.loadLeafletMap(); }
+    if ( this.track == null || this.track.points.length == 0) { return }      
+    this.removeUiToMap(this._polyline, this._marker, this._startMarker, this._endMarker); // remove old ui elements from map
 
-  removeTrackFromMap() {
-    if (this._polyline != null) { this._polyline.remove(this._map);}
-  }
+    let line = this.track.points.map( p => ([p.latitude, p.longitude]) )                  // prepare a new line using lat and long from ponits
+    this._polyline = Leaflet.polyline(line, this.polylineOptions).addTo(this._map);       // add new polyline
 
-
-  addCircleToMap(){
-    if (this._map == null) {  
-      this.leafletMap();                                                         // initialise map before
-      setTimeout(() => { this.addCircleToMap(); }, 0);                           // add track after map is fully initialized
-      return;
-    }    
-
-    this.removeCircleFromMap();
-    Leaflet.circle([
-      this.center.latitude, this.center.longitude], this.circleOptions).addTo(this._map);
-  }
-
-  removeCircleFromMap() {
-    if (this._circle != null) { this._circle.remove(this._map);}
+    let firstPoint = this.track.points[0];
+    let lastPoint = this.track.points[this.track.points.length - 1];
+    this._startMarker = Leaflet.circleMarker([firstPoint.latitude, firstPoint.longitude], this.startMarkerOptions).addTo(this._map);
+    this._endMarker = Leaflet.circleMarker([lastPoint.latitude, lastPoint.longitude], this.endMarkerOptions).addTo(this._map);
+    this._map.fitBounds(this._polyline.getBounds());                                      // zoom the map to the polyline
   }
 
   addMarkerToMap(){
-    if (this.marker == null) { return }
-    if (this._map == null) {  
-      this.leafletMap();                                                         // initialise map before
-      setTimeout(() => { this.addMarkerToMap(); }, 0);                           // add track after map is fully initialized
-      return;
-    }    
-
-    this.removeMarkerToMap();
+    if (this._map == null) { this.loadLeafletMap(); }
+    this.removeUiToMap(this._marker);
     this._marker = Leaflet.marker([this.marker.latitude, this.marker.longitude]).addTo(this._map);
   }
 
-  removeMarkerToMap(){
-    if (this._marker != null) { this._marker.remove(this._map); }
-  }
-
   addCircleMarkerToMap(){
-    if (this.marker == null) { return }
-    if (this._map == null) {  
-      this.leafletMap();                                                         // initialise map before
-      setTimeout(() => { this.addCircleMarkerToMap(); }, 0);                           // add track after map is fully initialized
-      return;
-    }    
-
-    this.removeCircleMarkerToMap();
+    if (this._map == null) { this.loadLeafletMap(); }
+    this.removeUiToMap(this._marker);
     this._marker = Leaflet.circleMarker([this.marker.latitude, this.marker.longitude], this.circleMarkerOptions).addTo(this._map);
   }
 
-  removeCircleMarkerToMap(){
-    if (this._marker != null) { this._marker.remove(this._map); }
-  }
-
   setMapCenter(){
-    if (this.center == null ){ return }
-    if (this._map == null) { 
-      this.leafletMap();                                                        // initialise map before
-      setTimeout(() => { this.setMapCenter(); }, 0);                            // add track after map is fully initialized
-      return;
-    }    
+    if (this._map == null) { this.loadLeafletMap(); }
+    if (this.center == null) { return }
     this._map.setView([this.center.latitude, this.center.longitude]);
+    setTimeout(() => { this._map.invalidateSize(); }, 0);
   }
 
   setZoom(){
-    if (this.center == null){ return }
-    if (this._map == null) { 
-      this.leafletMap();                                                        // initialise map before
-      setTimeout(() => { this.setZoom(); }, 0);                                 // add track after map is fully initialized
-      return;
-    }   
+    if (this._map == null) { this.loadLeafletMap(); }
+    if (this.zoom == null) { return }
     this._map.setView([this.center.latitude, this.center.longitude], this.zoom);
+    setTimeout(() => { this._map.invalidateSize(); }, 0);
   }
 
-  removeUiToMap(el){
-    if (el != null) { el.remove(this._map); }
+  removeUiToMap(...elements){
+    elements.forEach( (el) => {
+      if (el != null) { el.remove(this._map); }
+    })
   }
 
 }
